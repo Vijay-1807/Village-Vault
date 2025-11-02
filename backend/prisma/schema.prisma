@@ -1,0 +1,176 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SARPANCH
+  VILLAGER
+}
+
+enum AlertPriority {
+  LOW
+  MEDIUM
+  HIGH
+  EMERGENCY
+}
+
+enum MessageType {
+  TEXT
+  VOICE
+  IMAGE
+}
+
+enum AlertChannel {
+  IN_APP
+  SMS
+  MISSED_CALL
+}
+
+model User {
+  id          String   @id @default(cuid())
+  phoneNumber String   @unique
+  name        String
+  role        UserRole
+  pinCode     String
+  villageName String
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  sentAlerts     Alert[]     @relation("AlertSender")
+  receivedAlerts Alert[]     @relation("AlertReceiver")
+  sentMessages   Message[]   @relation("MessageSender")
+  receivedMessages Message[] @relation("MessageReceiver")
+  sosReports     SOSReport[]
+  alertDeliveries AlertDelivery[]
+  village        Village     @relation(fields: [pinCode, villageName], references: [pinCode, name])
+
+  @@unique([pinCode, villageName, role])
+  @@map("users")
+}
+
+model Village {
+  pinCode     String
+  name        String
+  state       String
+  district    String
+  sarpanchId  String? @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  users  User[]
+  alerts Alert[]
+
+  @@id([pinCode, name])
+  @@map("villages")
+}
+
+model Alert {
+  id          String        @id @default(cuid())
+  title       String
+  message     String
+  priority    AlertPriority @default(MEDIUM)
+  channels    AlertChannel[]
+  isScheduled Boolean       @default(false)
+  scheduledAt DateTime?
+  isRepeated  Boolean       @default(false)
+  repeatInterval String?    // e.g., "daily", "weekly", "monthly"
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  senderId    String
+  sender      User          @relation("AlertSender", fields: [senderId], references: [id])
+  villagePinCode String
+  villageName String
+  village     Village        @relation(fields: [villagePinCode, villageName], references: [pinCode, name])
+  receivers   User[]         @relation("AlertReceiver")
+  deliveries  AlertDelivery[]
+
+  @@map("alerts")
+}
+
+model AlertDelivery {
+  id        String       @id @default(cuid())
+  channel   AlertChannel
+  status    String       // "sent", "delivered", "failed"
+  sentAt    DateTime?
+  deliveredAt DateTime?
+  error     String?
+  createdAt DateTime     @default(now())
+
+  // Relations
+  alertId   String
+  alert     Alert        @relation(fields: [alertId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+
+  @@map("alert_deliveries")
+}
+
+model Message {
+  id        String      @id @default(cuid())
+  content   String?
+  type      MessageType @default(TEXT)
+  audioUrl  String?     // For voice messages
+  imageUrl  String?     // For image messages
+  isRead    Boolean     @default(false)
+  createdAt DateTime    @default(now())
+
+  // Relations
+  senderId   String
+  sender     User        @relation("MessageSender", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User        @relation("MessageReceiver", fields: [receiverId], references: [id])
+
+  @@map("messages")
+}
+
+model SOSReport {
+  id          String   @id @default(cuid())
+  description String?
+  location    String?
+  priority    AlertPriority @default(EMERGENCY)
+  status      String   @default("pending") // "pending", "acknowledged", "resolved"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  reporterId String
+  reporter   User     @relation(fields: [reporterId], references: [id])
+
+  @@map("sos_reports")
+}
+
+model Language {
+  id           String        @id @default(cuid())
+  code         String        @unique // "en", "hi", "te"
+  name         String
+  isActive     Boolean       @default(true)
+  translations Translation[]
+
+  @@map("languages")
+}
+
+model Translation {
+  id         String @id @default(cuid())
+  key        String
+  value      String
+  languageId String
+
+  // Relations
+  language Language @relation(fields: [languageId], references: [id])
+
+  @@unique([key, languageId])
+  @@map("translations")
+}

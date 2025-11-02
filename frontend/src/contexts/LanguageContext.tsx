@@ -1,0 +1,806 @@
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+
+interface LanguageContextType {
+  language: string
+  setLanguage: (lang: string) => void
+  t: (key: string) => string
+}
+
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
+
+export const useLanguage = () => {
+  const context = useContext(LanguageContext)
+  if (context === undefined) {
+    throw new Error('useLanguage must be used within a LanguageProvider')
+  }
+  return context
+}
+
+interface LanguageProviderProps {
+  children: ReactNode
+}
+
+const translations = {
+  en: {
+    // Common
+    'app.title': 'VillageVault',
+    'app.subtitle': 'Unified Village Communication System',
+    'common.loading': 'Loading...',
+    'common.error': 'Error',
+    'common.success': 'Success',
+    'common.cancel': 'Cancel',
+    'common.save': 'Save',
+    'common.delete': 'Delete',
+    'common.edit': 'Edit',
+    'common.send': 'Send',
+    'common.back': 'Back',
+    'common.next': 'Next',
+    'common.previous': 'Previous',
+    'common.search': 'Search',
+    'common.filter': 'Filter',
+    'common.clear': 'Clear',
+    'common.confirm': 'Confirm',
+    'common.yes': 'Yes',
+    'common.no': 'No',
+    
+    // Auth
+    'auth.login': 'Login',
+    'auth.register': 'Register',
+    'auth.logout': 'Logout',
+    'auth.phoneNumber': 'Phone Number',
+    'auth.name': 'Full Name',
+    'auth.role': 'Role',
+    'auth.pinCode': 'PIN Code',
+    'auth.villageName': 'Village Name',
+    'auth.otp': 'OTP',
+    'auth.verifyOTP': 'Verify OTP',
+    'auth.resendOTP': 'Resend OTP',
+    'auth.role.sarpanch': 'Sarpanch',
+    'auth.role.villager': 'Villager',
+    'auth.loginSuccess': 'Login successful',
+    'auth.registerSuccess': 'Registration successful',
+    'auth.logoutSuccess': 'Logged out successfully',
+    'auth.otpSent': 'OTP sent to your phone number',
+    'auth.otpVerified': 'Phone number verified successfully',
+    'auth.invalidOTP': 'Invalid OTP',
+    'auth.otpExpired': 'OTP expired',
+    
+    // Dashboard
+    'dashboard.title': 'Dashboard',
+    'dashboard.welcome': 'Welcome',
+    'dashboard.recentAlerts': 'Recent Alerts',
+    'dashboard.pendingSOS': 'Pending SOS Reports',
+    'dashboard.villageStats': 'Village Statistics',
+    'dashboard.totalUsers': 'Total Users',
+    'dashboard.totalVillagers': 'Total Villagers',
+    'dashboard.totalAlerts': 'Total Alerts',
+    'dashboard.recentMessages': 'Recent Messages',
+    
+    // Alerts
+    'alerts.title': 'Alerts',
+    'alerts.create': 'Create Alert',
+    'alerts.alertTitle': 'Alert Title',
+    'alerts.message': 'Message',
+    'alerts.priority': 'Priority',
+    'alerts.priority.low': 'Low',
+    'alerts.priority.medium': 'Medium',
+    'alerts.priority.high': 'High',
+    'alerts.priority.emergency': 'Emergency',
+    'alerts.channels': 'Delivery Channels',
+    'alerts.channels.inApp': 'In-App Notification',
+    'alerts.channels.sms': 'SMS',
+    'alerts.channels.missedCall': 'Missed Call',
+    'alerts.scheduled': 'Scheduled',
+    'alerts.scheduledAt': 'Scheduled At',
+    'alerts.repeated': 'Repeated',
+    'alerts.repeatInterval': 'Repeat Interval',
+    'alerts.repeatInterval.daily': 'Daily',
+    'alerts.repeatInterval.weekly': 'Weekly',
+    'alerts.repeatInterval.monthly': 'Monthly',
+    'alerts.sent': 'Sent',
+    'alerts.delivered': 'Delivered',
+    'alerts.failed': 'Failed',
+    'alerts.pending': 'Pending',
+    
+    // Messages
+    'messages.title': 'Messages',
+    'messages.new': 'New Message',
+    'messages.conversations': 'Conversations',
+    'messages.typeMessage': 'Type a message...',
+    'messages.imageMessage': 'Image Message',
+    'messages.stopRecording': 'Stop Recording',
+    'messages.sendVoice': 'Send Voice Message',
+    'messages.uploadImage': 'Upload Image',
+    'messages.unread': 'Unread',
+    'messages.read': 'Read',
+    'messages.typing': 'typing...',
+    'messages.noMessages': 'No messages yet',
+    'messages.startConversation': 'Start the conversation by sending a message below!',
+    'messages.sharedImage': 'Shared an image',
+    'messages.clearAll': 'Clear All Messages',
+    'messages.groupChat': 'Village Group Chat',
+    'messages.allCanChat': 'All villagers and Sarpanch can chat here',
+    
+    // SOS
+    'sos.title': 'SOS Reports',
+    'sos.create': 'Create SOS Report',
+    'sos.description': 'Description',
+    'sos.location': 'Location',
+    'sos.status': 'Status',
+    'sos.status.pending': 'Pending',
+    'sos.status.acknowledged': 'Acknowledged',
+    'sos.status.resolved': 'Resolved',
+    'sos.emergency': 'Emergency',
+    'sos.reportCreated': 'SOS report created successfully',
+    'sos.statusUpdated': 'SOS report status updated',
+    
+    // Profile
+    'profile.title': 'Profile',
+    'profile.edit': 'Edit Profile',
+    'profile.name': 'Name',
+    'profile.phoneNumber': 'Phone Number',
+    'profile.role': 'Role',
+    'profile.village': 'Village',
+    'profile.pinCode': 'PIN Code',
+    'profile.memberSince': 'Member Since',
+    'profile.updateSuccess': 'Profile updated successfully',
+    
+    // Village
+    'village.title': 'Village Information',
+    'village.name': 'Village Name',
+    'village.state': 'State',
+    'village.district': 'District',
+    'village.members': 'Village Members',
+    'village.sarpanch': 'Sarpanch',
+    'village.villagers': 'Villagers',
+    
+    // Navigation
+    'nav.dashboard': 'Dashboard',
+    'nav.alerts': 'Alerts',
+    'nav.messages': 'Messages',
+    'nav.sos': 'SOS',
+    'nav.profile': 'Profile',
+    'nav.village': 'Village',
+    
+    // Errors
+    'error.network': 'Network error. Please check your connection.',
+    'error.unauthorized': 'Unauthorized access.',
+    'error.forbidden': 'Access forbidden.',
+    'error.notFound': 'Resource not found.',
+    'error.serverError': 'Server error. Please try again later.',
+    'error.validation': 'Please check your input and try again.',
+  },
+  
+  hi: {
+    // Common
+    'app.title': 'विलेजवॉल्ट',
+    'app.subtitle': 'एकीकृत ग्राम संचार प्रणाली',
+    'common.loading': 'लोड हो रहा है...',
+    'common.error': 'त्रुटि',
+    'common.success': 'सफलता',
+    'common.cancel': 'रद्द करें',
+    'common.save': 'सहेजें',
+    'common.delete': 'हटाएं',
+    'common.edit': 'संपादित करें',
+    'common.send': 'भेजें',
+    'common.back': 'वापस',
+    'common.next': 'अगला',
+    'common.previous': 'पिछला',
+    'common.search': 'खोजें',
+    'common.filter': 'फिल्टर',
+    'common.clear': 'साफ करें',
+    'common.confirm': 'पुष्टि करें',
+    'common.yes': 'हाँ',
+    'common.no': 'नहीं',
+    
+    // Auth
+    'auth.login': 'लॉगिन',
+    'auth.register': 'रजिस्टर',
+    'auth.logout': 'लॉगआउट',
+    'auth.phoneNumber': 'फोन नंबर',
+    'auth.name': 'पूरा नाम',
+    'auth.role': 'भूमिका',
+    'auth.pinCode': 'पिन कोड',
+    'auth.villageName': 'गाँव का नाम',
+    'auth.otp': 'ओटीपी',
+    'auth.verifyOTP': 'ओटीपी सत्यापित करें',
+    'auth.resendOTP': 'ओटीपी पुनः भेजें',
+    'auth.role.sarpanch': 'सरपंच',
+    'auth.role.villager': 'ग्रामीण',
+    'auth.loginSuccess': 'लॉगिन सफल',
+    'auth.registerSuccess': 'रजिस्ट्रेशन सफल',
+    'auth.logoutSuccess': 'लॉगआउट सफल',
+    'auth.otpSent': 'आपके फोन नंबर पर ओटीपी भेजा गया',
+    'auth.otpVerified': 'फोन नंबर सफलतापूर्वक सत्यापित',
+    'auth.invalidOTP': 'अमान्य ओटीपी',
+    'auth.otpExpired': 'ओटीपी समाप्त',
+    
+    // Dashboard
+    'dashboard.title': 'डैशबोर्ड',
+    'dashboard.welcome': 'स्वागत है',
+    'dashboard.recentAlerts': 'हाल के अलर्ट',
+    'dashboard.pendingSOS': 'लंबित एसओएस रिपोर्ट',
+    'dashboard.villageStats': 'गाँव के आंकड़े',
+    'dashboard.totalUsers': 'कुल उपयोगकर्ता',
+    'dashboard.totalVillagers': 'कुल ग्रामीण',
+    'dashboard.totalAlerts': 'कुल अलर्ट',
+    'dashboard.recentMessages': 'हाल के संदेश',
+    
+    // Alerts
+    'alerts.title': 'अलर्ट',
+    'alerts.create': 'अलर्ट बनाएं',
+    'alerts.alertTitle': 'अलर्ट शीर्षक',
+    'alerts.message': 'संदेश',
+    'alerts.priority': 'प्राथमिकता',
+    'alerts.priority.low': 'कम',
+    'alerts.priority.medium': 'मध्यम',
+    'alerts.priority.high': 'उच्च',
+    'alerts.priority.emergency': 'आपातकाल',
+    'alerts.channels': 'डिलीवरी चैनल',
+    'alerts.channels.inApp': 'इन-ऐप सूचना',
+    'alerts.channels.sms': 'एसएमएस',
+    'alerts.channels.missedCall': 'मिस्ड कॉल',
+    'alerts.scheduled': 'निर्धारित',
+    'alerts.scheduledAt': 'निर्धारित समय',
+    'alerts.repeated': 'दोहराया गया',
+    'alerts.repeatInterval': 'दोहराव अंतराल',
+    'alerts.repeatInterval.daily': 'दैनिक',
+    'alerts.repeatInterval.weekly': 'साप्ताहिक',
+    'alerts.repeatInterval.monthly': 'मासिक',
+    'alerts.sent': 'भेजा गया',
+    'alerts.delivered': 'डिलीवर किया गया',
+    'alerts.failed': 'असफल',
+    'alerts.pending': 'लंबित',
+    
+    // Messages
+    'messages.title': 'संदेश',
+    'messages.new': 'नया संदेश',
+    'messages.conversations': 'बातचीत',
+    'messages.typeMessage': 'संदेश टाइप करें...',
+    'messages.imageMessage': 'छवि संदेश',
+    'messages.stopRecording': 'रिकॉर्डिंग रोकें',
+    'messages.sendVoice': 'वॉइस संदेश भेजें',
+    'messages.uploadImage': 'छवि अपलोड करें',
+    'messages.unread': 'अपठित',
+    'messages.read': 'पढ़ा गया',
+    'messages.typing': 'टाइप कर रहे हैं...',
+    'messages.noMessages': 'अभी तक कोई संदेश नहीं',
+    'messages.startConversation': 'नीचे संदेश भेजकर बातचीत शुरू करें!',
+    'messages.sharedImage': 'एक छवि साझा की',
+    'messages.clearAll': 'सभी संदेश साफ़ करें',
+    'messages.groupChat': 'गाँव ग्रुप चैट',
+    'messages.allCanChat': 'सभी ग्रामीण और सरपंच यहाँ चैट कर सकते हैं',
+    
+    // SOS
+    'sos.title': 'एसओएस रिपोर्ट',
+    'sos.create': 'एसओएस रिपोर्ट बनाएं',
+    'sos.description': 'विवरण',
+    'sos.location': 'स्थान',
+    'sos.status': 'स्थिति',
+    'sos.status.pending': 'लंबित',
+    'sos.status.acknowledged': 'स्वीकृत',
+    'sos.status.resolved': 'हल किया गया',
+    'sos.emergency': 'आपातकाल',
+    'sos.reportCreated': 'एसओएस रिपोर्ट सफलतापूर्वक बनाई गई',
+    'sos.statusUpdated': 'एसओएस रिपोर्ट स्थिति अपडेट की गई',
+    
+    // Profile
+    'profile.title': 'प्रोफाइल',
+    'profile.edit': 'प्रोफाइल संपादित करें',
+    'profile.name': 'नाम',
+    'profile.phoneNumber': 'फोन नंबर',
+    'profile.role': 'भूमिका',
+    'profile.village': 'गाँव',
+    'profile.pinCode': 'पिन कोड',
+    'profile.memberSince': 'सदस्यता से',
+    'profile.updateSuccess': 'प्रोफाइल सफलतापूर्वक अपडेट किया गया',
+    
+    // Village
+    'village.title': 'गाँव की जानकारी',
+    'village.name': 'गाँव का नाम',
+    'village.state': 'राज्य',
+    'village.district': 'जिला',
+    'village.members': 'गाँव के सदस्य',
+    'village.sarpanch': 'सरपंच',
+    'village.villagers': 'ग्रामीण',
+    
+    // Navigation
+    'nav.dashboard': 'डैशबोर्ड',
+    'nav.alerts': 'अलर्ट',
+    'nav.messages': 'संदेश',
+    'nav.sos': 'एसओएस',
+    'nav.profile': 'प्रोफाइल',
+    'nav.village': 'गाँव',
+    
+    // Errors
+    'error.network': 'नेटवर्क त्रुटि। कृपया अपना कनेक्शन जांचें।',
+    'error.unauthorized': 'अनधिकृत पहुंच।',
+    'error.forbidden': 'पहुंच निषिद्ध।',
+    'error.notFound': 'संसाधन नहीं मिला।',
+    'error.serverError': 'सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।',
+    'error.validation': 'कृपया अपना इनपुट जांचें और पुनः प्रयास करें।',
+  },
+  
+  te: {
+    // Common
+    'app.title': 'విలేజ్‌వాల్ట్',
+    'app.subtitle': 'ఏకీకృత గ్రామ సంభాషణ వ్యవస్థ',
+    'common.loading': 'లోడ్ అవుతోంది...',
+    'common.error': 'లోపం',
+    'common.success': 'విజయం',
+    'common.cancel': 'రద్దు చేయండి',
+    'common.save': 'సేవ్ చేయండి',
+    'common.delete': 'తొలగించండి',
+    'common.edit': 'సవరించండి',
+    'common.send': 'పంపండి',
+    'common.back': 'వెనుకకు',
+    'common.next': 'తదుపరి',
+    'common.previous': 'మునుపటి',
+    'common.search': 'వెతకండి',
+    'common.filter': 'ఫిల్టర్',
+    'common.clear': 'క్లియర్ చేయండి',
+    'common.confirm': 'నిర్ధారించండి',
+    'common.yes': 'అవును',
+    'common.no': 'కాదు',
+    
+    // Auth
+    'auth.login': 'లాగిన్',
+    'auth.register': 'నమోదు',
+    'auth.logout': 'లాగ్‌అవుట్',
+    'auth.phoneNumber': 'ఫోన్ నంబర్',
+    'auth.name': 'పూర్తి పేరు',
+    'auth.role': 'పాత్ర',
+    'auth.pinCode': 'పిన్ కోడ్',
+    'auth.villageName': 'గ్రామం పేరు',
+    'auth.otp': 'ఓటిపి',
+    'auth.verifyOTP': 'ఓటిపి ధృవీకరించండి',
+    'auth.resendOTP': 'ఓటిపి మళ్లీ పంపండి',
+    'auth.role.sarpanch': 'సర్పంచ్',
+    'auth.role.villager': 'గ్రామీణుడు',
+    'auth.loginSuccess': 'లాగిన్ విజయవంతం',
+    'auth.registerSuccess': 'నమోదు విజయవంతం',
+    'auth.logoutSuccess': 'లాగ్‌అవుట్ విజయవంతం',
+    'auth.otpSent': 'మీ ఫోన్ నంబర్‌కు ఓటిపి పంపబడింది',
+    'auth.otpVerified': 'ఫోన్ నంబర్ విజయవంతంగా ధృవీకరించబడింది',
+    'auth.invalidOTP': 'చెల్లని ఓటిపి',
+    'auth.otpExpired': 'ఓటిపి గడువు ముగిసింది',
+    
+    // Dashboard
+    'dashboard.title': 'డ్యాష్‌బోర్డ్',
+    'dashboard.welcome': 'స్వాగతం',
+    'dashboard.recentAlerts': 'ఇటీవలి అలర్ట్‌లు',
+    'dashboard.pendingSOS': 'పెండింగ్ ఎస్‌ఓఎస్ నివేదికలు',
+    'dashboard.villageStats': 'గ్రామ గణాంకాలు',
+    'dashboard.totalUsers': 'మొత్తం వినియోగదారులు',
+    'dashboard.totalVillagers': 'మొత్తం గ్రామీణులు',
+    'dashboard.totalAlerts': 'మొత్తం అలర్ట్‌లు',
+    'dashboard.recentMessages': 'ఇటీవలి సందేశాలు',
+    
+    // Alerts
+    'alerts.title': 'అలర్ట్‌లు',
+    'alerts.create': 'అలర్ట్ సృష్టించండి',
+    'alerts.alertTitle': 'అలర్ట్ శీర్షిక',
+    'alerts.message': 'సందేశం',
+    'alerts.priority': 'ప్రాధాన్యత',
+    'alerts.priority.low': 'తక్కువ',
+    'alerts.priority.medium': 'మధ్యస్థ',
+    'alerts.priority.high': 'ఎక్కువ',
+    'alerts.priority.emergency': 'అత్యవసర',
+    'alerts.channels': 'డెలివరీ ఛానెల్‌లు',
+    'alerts.channels.inApp': 'ఇన్-అప్ నోటిఫికేషన్',
+    'alerts.channels.sms': 'ఎస్‌ఎమ్‌ఎస్',
+    'alerts.channels.missedCall': 'మిస్‌డ్ కాల్',
+    'alerts.scheduled': 'షెడ్యూల్ చేయబడింది',
+    'alerts.scheduledAt': 'షెడ్యూల్ సమయం',
+    'alerts.repeated': 'పునరావృతం',
+    'alerts.repeatInterval': 'పునరావృత విరామం',
+    'alerts.repeatInterval.daily': 'రోజువారీ',
+    'alerts.repeatInterval.weekly': 'వారానికోసారి',
+    'alerts.repeatInterval.monthly': 'నెలవారీ',
+    'alerts.sent': 'పంపబడింది',
+    'alerts.delivered': 'డెలివర్ చేయబడింది',
+    'alerts.failed': 'విఫలం',
+    'alerts.pending': 'పెండింగ్',
+    
+    // Messages
+    'messages.title': 'సందేశాలు',
+    'messages.new': 'కొత్త సందేశం',
+    'messages.conversations': 'సంభాషణలు',
+    'messages.typeMessage': 'సందేశం టైప్ చేయండి...',
+    'messages.imageMessage': 'ఇమేజ్ సందేశం',
+    'messages.stopRecording': 'రికార్డింగ్ ఆపండి',
+    'messages.sendVoice': 'వాయిస్ సందేశం పంపండి',
+    'messages.uploadImage': 'ఇమేజ్ అప్‌లోడ్ చేయండి',
+    'messages.unread': 'చదవనివి',
+    'messages.read': 'చదివినవి',
+    'messages.typing': 'టైప్ చేస్తున్నారు...',
+    'messages.noMessages': 'ఇంకా సందేశాలు లేవు',
+    'messages.startConversation': 'క్రింద సందేశం పంపి సంభాషణ ప్రారంభించండి!',
+    'messages.sharedImage': 'ఒక చిత్రాన్ని భాగస్వామ్యం చేశారు',
+    'messages.clearAll': 'అన్ని సందేశాలను క్లియర్ చేయండి',
+    'messages.groupChat': 'గ్రామ గ్రూప్ చాట్',
+    'messages.allCanChat': 'అన్ని గ్రామస్తులు మరియు సర్పంచ్ ఇక్కడ చాట్ చేయవచ్చు',
+    
+    // SOS
+    'sos.title': 'ఎస్‌ఓఎస్ నివేదికలు',
+    'sos.create': 'ఎస్‌ఓఎస్ నివేదిక సృష్టించండి',
+    'sos.description': 'వివరణ',
+    'sos.location': 'స్థానం',
+    'sos.status': 'స్థితి',
+    'sos.status.pending': 'పెండింగ్',
+    'sos.status.acknowledged': 'అంగీకరించబడింది',
+    'sos.status.resolved': 'పరిష్కరించబడింది',
+    'sos.emergency': 'అత్యవసర',
+    'sos.reportCreated': 'ఎస్‌ఓఎస్ నివేదిక విజయవంతంగా సృష్టించబడింది',
+    'sos.statusUpdated': 'ఎస్‌ఓఎస్ నివేదిక స్థితి అప్‌డేట్ చేయబడింది',
+    
+    // Profile
+    'profile.title': 'ప్రొఫైల్',
+    'profile.edit': 'ప్రొఫైల్ సవరించండి',
+    'profile.name': 'పేరు',
+    'profile.phoneNumber': 'ఫోన్ నంబర్',
+    'profile.role': 'పాత్ర',
+    'profile.village': 'గ్రామం',
+    'profile.pinCode': 'పిన్ కోడ్',
+    'profile.memberSince': 'సభ్యత్వం నుండి',
+    'profile.updateSuccess': 'ప్రొఫైల్ విజయవంతంగా అప్‌డేట్ చేయబడింది',
+    
+    // Village
+    'village.title': 'గ్రామ సమాచారం',
+    'village.name': 'గ్రామం పేరు',
+    'village.state': 'రాష్ట్రం',
+    'village.district': 'జిల్లా',
+    'village.members': 'గ్రామ సభ్యులు',
+    'village.sarpanch': 'సర్పంచ్',
+    'village.villagers': 'గ్రామీణులు',
+    
+    // Navigation
+    'nav.dashboard': 'డ్యాష్‌బోర్డ్',
+    'nav.alerts': 'అలర్ట్‌లు',
+    'nav.messages': 'సందేశాలు',
+    'nav.sos': 'ఎస్‌ఓఎస్',
+    'nav.profile': 'ప్రొఫైల్',
+    'nav.village': 'గ్రామం',
+    
+    // Errors
+    'error.network': 'నెట్‌వర్క్ లోపం. దయచేసి మీ కనెక్షన్‌ను తనిఖీ చేయండి.',
+    'error.unauthorized': 'అనధికార ప్రవేశం.',
+    'error.forbidden': 'ప్రవేశం నిషేధించబడింది.',
+    'error.notFound': 'వనరు కనుగొనబడలేదు.',
+    'error.serverError': 'సర్వర్ లోపం. దయచేసి తర్వాత మళ్లీ ప్రయత్నించండి.',
+    'error.validation': 'దయచేసి మీ ఇన్‌పుట్‌ను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.',
+  },
+  
+  ta: {
+    // Common
+    'app.title': 'வில்லேஜ்வால்ட்',
+    'app.subtitle': 'ஒருங்கிணைந்த கிராம தொடர்பு அமைப்பு',
+    'common.loading': 'ஏற்றுகிறது...',
+    'common.error': 'பிழை',
+    'common.success': 'வெற்றி',
+    'common.cancel': 'ரத்து செய்',
+    'common.save': 'சேமி',
+    'common.delete': 'நீக்கு',
+    'common.edit': 'திருத்து',
+    'common.send': 'அனுப்பு',
+    'common.back': 'பின்',
+    'common.next': 'அடுத்து',
+    'common.previous': 'முந்தைய',
+    'common.search': 'தேடு',
+    'common.filter': 'வடிகட்டு',
+    'common.clear': 'அழி',
+    'common.confirm': 'உறுதிப்படுத்து',
+    'common.yes': 'ஆம்',
+    'common.no': 'இல்லை',
+    
+    // Auth
+    'auth.login': 'உள்நுழைவு',
+    'auth.register': 'பதிவு',
+    'auth.logout': 'வெளியேறு',
+    'auth.phoneNumber': 'தொலைபேசி எண்',
+    'auth.name': 'முழு பெயர்',
+    'auth.role': 'பங்கு',
+    'auth.pinCode': 'பின் குறியீடு',
+    'auth.villageName': 'கிராமத்தின் பெயர்',
+    'auth.otp': 'OTP',
+    'auth.verifyOTP': 'OTP சரிபார்',
+    'auth.resendOTP': 'OTP மீண்டும் அனுப்பு',
+    'auth.role.sarpanch': 'சர்பஞ்ச்',
+    'auth.role.villager': 'கிராமவாசி',
+    'auth.loginSuccess': 'உள்நுழைவு வெற்றிகரமானது',
+    'auth.registerSuccess': 'பதிவு வெற்றிகரமானது',
+    'auth.logoutSuccess': 'வெளியேறுதல் வெற்றிகரமானது',
+    'auth.otpSent': 'உங்கள் தொலைபேசி எண்ணுக்கு OTP அனுப்பப்பட்டது',
+    'auth.otpVerified': 'தொலைபேசி எண் வெற்றிகரமாக சரிபார்க்கப்பட்டது',
+    'auth.invalidOTP': 'தவறான OTP',
+    'auth.otpExpired': 'OTP காலாவதியானது',
+    
+    // Dashboard
+    'dashboard.title': 'டாஷ்போர்டு',
+    'dashboard.welcome': 'வரவேற்கிறோம்',
+    'dashboard.recentAlerts': 'சமீபத்திய எச்சரிக்கைகள்',
+    'dashboard.pendingSOS': 'நிலுவையில் உள்ள SOS அறிக்கைகள்',
+    'dashboard.villageStats': 'கிராம புள்ளிவிவரங்கள்',
+    'dashboard.totalUsers': 'மொத்த பயனர்கள்',
+    'dashboard.totalVillagers': 'மொத்த கிராமவாசிகள்',
+    'dashboard.totalAlerts': 'மொத்த எச்சரிக்கைகள்',
+    'dashboard.recentMessages': 'சமீபத்திய செய்திகள்',
+    
+    // Alerts
+    'alerts.title': 'எச்சரிக்கைகள்',
+    'alerts.create': 'எச்சரிக்கை உருவாக்கு',
+    'alerts.alertTitle': 'எச்சரிக்கை தலைப்பு',
+    'alerts.message': 'செய்தி',
+    'alerts.priority': 'முன்னுரிமை',
+    'alerts.priority.low': 'குறைந்த',
+    'alerts.priority.medium': 'நடுத்தர',
+    'alerts.priority.high': 'உயர்ந்த',
+    'alerts.priority.emergency': 'அவசர',
+    'alerts.channels': 'விநியோக சேனல்கள்',
+    'alerts.channels.inApp': 'இன்-ஆப் அறிவிப்பு',
+    'alerts.channels.sms': 'SMS',
+    'alerts.channels.missedCall': 'தவறிய அழைப்பு',
+    'alerts.scheduled': 'திட்டமிடப்பட்டது',
+    'alerts.scheduledAt': 'திட்டமிடப்பட்ட நேரம்',
+    'alerts.repeated': 'மீண்டும்',
+    'alerts.repeatInterval': 'மீண்டும் இடைவெளி',
+    'alerts.repeatInterval.daily': 'தினசரி',
+    'alerts.repeatInterval.weekly': 'வாராந்திர',
+    'alerts.repeatInterval.monthly': 'மாதாந்திர',
+    'alerts.sent': 'அனுப்பப்பட்டது',
+    'alerts.delivered': 'வழங்கப்பட்டது',
+    'alerts.failed': 'தோல்வி',
+    'alerts.pending': 'நிலுவையில்',
+    
+    // Messages
+    'messages.title': 'செய்திகள்',
+    'messages.new': 'புதிய செய்தி',
+    'messages.conversations': 'உரையாடல்கள்',
+    'messages.typeMessage': 'செய்தியை தட்டச்சு செய்...',
+    'messages.imageMessage': 'பட செய்தி',
+    'messages.stopRecording': 'பதிவை நிறுத்து',
+    'messages.sendVoice': 'குரல் செய்தி அனுப்பு',
+    'messages.uploadImage': 'படம் பதிவேற்று',
+    'messages.unread': 'படிக்காதவை',
+    'messages.read': 'படிக்கப்பட்டவை',
+    'messages.typing': 'தட்டச்சு செய்கிறார்...',
+    'messages.noMessages': 'இன்னும் செய்திகள் இல்லை',
+    'messages.startConversation': 'கீழே செய்தி அனுப்பி உரையாடலைத் தொடங்குங்கள்!',
+    'messages.sharedImage': 'ஒரு படத்தைப் பகிர்ந்தார்',
+    'messages.clearAll': 'அனைத்து செய்திகளையும் அழிக்கவும்',
+    'messages.groupChat': 'கிராம குழு அரட்டை',
+    'messages.allCanChat': 'அனைத்து கிராமவாசிகளும் சர்பஞ்சும் இங்கே அரட்டை அடிக்கலாம்',
+    
+    // SOS
+    'sos.title': 'SOS அறிக்கைகள்',
+    'sos.create': 'SOS அறிக்கை உருவாக்கு',
+    'sos.description': 'விளக்கம்',
+    'sos.location': 'இடம்',
+    'sos.status': 'நிலை',
+    'sos.status.pending': 'நிலுவையில்',
+    'sos.status.acknowledged': 'ஏற்றுக்கொள்ளப்பட்டது',
+    'sos.status.resolved': 'தீர்வு காணப்பட்டது',
+    'sos.emergency': 'அவசர',
+    'sos.reportCreated': 'SOS அறிக்கை வெற்றிகரமாக உருவாக்கப்பட்டது',
+    'sos.statusUpdated': 'SOS அறிக்கை நிலை புதுப்பிக்கப்பட்டது',
+    
+    // Profile
+    'profile.title': 'சுயவிவரம்',
+    'profile.edit': 'சுயவிவரத்தை திருத்து',
+    'profile.name': 'பெயர்',
+    'profile.phoneNumber': 'தொலைபேசி எண்',
+    'profile.role': 'பங்கு',
+    'profile.village': 'கிராமம்',
+    'profile.pinCode': 'பின் குறியீடு',
+    'profile.memberSince': 'உறுப்பினர் முதல்',
+    'profile.updateSuccess': 'சுயவிவரம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது',
+    
+    // Village
+    'village.title': 'கிராம தகவல்',
+    'village.name': 'கிராமத்தின் பெயர்',
+    'village.state': 'மாநிலம்',
+    'village.district': 'மாவட்டம்',
+    'village.members': 'கிராம உறுப்பினர்கள்',
+    'village.sarpanch': 'சர்பஞ்ச்',
+    'village.villagers': 'கிராமவாசிகள்',
+    
+    // Navigation
+    'nav.dashboard': 'டாஷ்போர்டு',
+    'nav.alerts': 'எச்சரிக்கைகள்',
+    'nav.messages': 'செய்திகள்',
+    'nav.sos': 'SOS',
+    'nav.profile': 'சுயவிவரம்',
+    'nav.village': 'கிராமம்',
+    
+    // Errors
+    'error.network': 'நெட்வொர்க் பிழை. தயவுசெய்து உங்கள் இணைப்பை சரிபார்க்கவும்.',
+    'error.unauthorized': 'அனுமதியற்ற அணுகல்.',
+    'error.forbidden': 'அணுகல் தடைசெய்யப்பட்டது.',
+    'error.notFound': 'வளம் கிடைக்கவில்லை.',
+    'error.serverError': 'சர்வர் பிழை. தயவுசெய்து பின்னர் மீண்டும் முயற்சிக்கவும்.',
+    'error.validation': 'தயவுசெய்து உங்கள் உள்ளீட்டை சரிபார்த்து மீண்டும் முயற்சிக்கவும்.',
+  },
+  
+  kn: {
+    // Common
+    'app.title': 'ವಿಲೇಜ್‌ವಾಲ್ಟ್',
+    'app.subtitle': 'ಏಕೀಕೃತ ಗ್ರಾಮ ಸಂವಹನ ವ್ಯವಸ್ಥೆ',
+    'common.loading': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+    'common.error': 'ದೋಷ',
+    'common.success': 'ಯಶಸ್ಸು',
+    'common.cancel': 'ರದ್ದುಗೊಳಿಸಿ',
+    'common.save': 'ಉಳಿಸಿ',
+    'common.delete': 'ಅಳಿಸಿ',
+    'common.edit': 'ಸಂಪಾದಿಸಿ',
+    'common.send': 'ಕಳುಹಿಸಿ',
+    'common.back': 'ಹಿಂದಕ್ಕೆ',
+    'common.next': 'ಮುಂದೆ',
+    'common.previous': 'ಹಿಂದಿನ',
+    'common.search': 'ಹುಡುಕಿ',
+    'common.filter': 'ಫಿಲ್ಟರ್',
+    'common.clear': 'ಸ್ಪಷ್ಟಗೊಳಿಸಿ',
+    'common.confirm': 'ದೃಢೀಕರಿಸಿ',
+    'common.yes': 'ಹೌದು',
+    'common.no': 'ಇಲ್ಲ',
+    
+    // Auth
+    'auth.login': 'ಲಾಗಿನ್',
+    'auth.register': 'ನೋಂದಣಿ',
+    'auth.logout': 'ಲಾಗ್‌ಔಟ್',
+    'auth.phoneNumber': 'ಫೋನ್ ಸಂಖ್ಯೆ',
+    'auth.name': 'ಪೂರ್ಣ ಹೆಸರು',
+    'auth.role': 'ಪಾತ್ರ',
+    'auth.pinCode': 'ಪಿನ್ ಕೋಡ್',
+    'auth.villageName': 'ಗ್ರಾಮದ ಹೆಸರು',
+    'auth.otp': 'OTP',
+    'auth.verifyOTP': 'OTP ಪರಿಶೀಲಿಸಿ',
+    'auth.resendOTP': 'OTP ಮರುಕಳುಹಿಸಿ',
+    'auth.role.sarpanch': 'ಸರ್ಪಂಚ್',
+    'auth.role.villager': 'ಗ್ರಾಮೀಣ',
+    'auth.loginSuccess': 'ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ',
+    'auth.registerSuccess': 'ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ',
+    'auth.logoutSuccess': 'ಲಾಗ್‌ಔಟ್ ಯಶಸ್ವಿಯಾಗಿದೆ',
+    'auth.otpSent': 'ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆಗೆ OTP ಕಳುಹಿಸಲಾಗಿದೆ',
+    'auth.otpVerified': 'ಫೋನ್ ಸಂಖ್ಯೆ ಯಶಸ್ವಿಯಾಗಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ',
+    'auth.invalidOTP': 'ಅಮಾನ್ಯ OTP',
+    'auth.otpExpired': 'OTP ಅವಧಿ ಮುಗಿದಿದೆ',
+    
+    // Dashboard
+    'dashboard.title': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
+    'dashboard.welcome': 'ಸ್ವಾಗತ',
+    'dashboard.recentAlerts': 'ಇತ್ತೀಚಿನ ಎಚ್ಚರಿಕೆಗಳು',
+    'dashboard.pendingSOS': 'ಬಾಕಿ SOS ವರದಿಗಳು',
+    'dashboard.villageStats': 'ಗ್ರಾಮದ ಅಂಕಿಅಂಶಗಳು',
+    'dashboard.totalUsers': 'ಒಟ್ಟು ಬಳಕೆದಾರರು',
+    'dashboard.totalVillagers': 'ಒಟ್ಟು ಗ್ರಾಮೀಣರು',
+    'dashboard.totalAlerts': 'ಒಟ್ಟು ಎಚ್ಚರಿಕೆಗಳು',
+    'dashboard.recentMessages': 'ಇತ್ತೀಚಿನ ಸಂದೇಶಗಳು',
+    
+    // Alerts
+    'alerts.title': 'ಎಚ್ಚರಿಕೆಗಳು',
+    'alerts.create': 'ಎಚ್ಚರಿಕೆ ರಚಿಸಿ',
+    'alerts.alertTitle': 'ಎಚ್ಚರಿಕೆ ಶೀರ್ಷಿಕೆ',
+    'alerts.message': 'ಸಂದೇಶ',
+    'alerts.priority': 'ಅಗ್ರತೆ',
+    'alerts.priority.low': 'ಕಡಿಮೆ',
+    'alerts.priority.medium': 'ಮಧ್ಯಮ',
+    'alerts.priority.high': 'ಹೆಚ್ಚು',
+    'alerts.priority.emergency': 'ತುರ್ತು',
+    'alerts.channels': 'ವಿತರಣಾ ಚಾನಲ್‌ಗಳು',
+    'alerts.channels.inApp': 'ಇನ್-ಅಪ್ ಅಧಿಸೂಚನೆ',
+    'alerts.channels.sms': 'SMS',
+    'alerts.channels.missedCall': 'ತಪ್ಪಿದ ಕರೆ',
+    'alerts.scheduled': 'ಷೆಡ್ಯೂಲ್ ಮಾಡಲಾಗಿದೆ',
+    'alerts.scheduledAt': 'ಷೆಡ್ಯೂಲ್ ಸಮಯ',
+    'alerts.repeated': 'ಪುನರಾವರ್ತಿತ',
+    'alerts.repeatInterval': 'ಪುನರಾವರ್ತನೆ ಮಧ್ಯಂತರ',
+    'alerts.repeatInterval.daily': 'ದೈನಂದಿನ',
+    'alerts.repeatInterval.weekly': 'ವಾರಕ್ಕೊಮ್ಮೆ',
+    'alerts.repeatInterval.monthly': 'ತಿಂಗಳಿಗೊಮ್ಮೆ',
+    'alerts.sent': 'ಕಳುಹಿಸಲಾಗಿದೆ',
+    'alerts.delivered': 'ವಿತರಿಸಲಾಗಿದೆ',
+    'alerts.failed': 'ವಿಫಲ',
+    'alerts.pending': 'ಬಾಕಿ',
+    
+    // Messages
+    'messages.title': 'ಸಂದೇಶಗಳು',
+    'messages.new': 'ಹೊಸ ಸಂದೇಶ',
+    'messages.conversations': 'ಸಂಭಾಷಣೆಗಳು',
+    'messages.typeMessage': 'ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡಿ...',
+    'messages.imageMessage': 'ಚಿತ್ರ ಸಂದೇಶ',
+    'messages.stopRecording': 'ರೆಕಾರ್ಡಿಂಗ್ ನಿಲ್ಲಿಸಿ',
+    'messages.sendVoice': 'ಧ್ವನಿ ಸಂದೇಶ ಕಳುಹಿಸಿ',
+    'messages.uploadImage': 'ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+    'messages.unread': 'ಓದದವು',
+    'messages.read': 'ಓದಿದವು',
+    'messages.typing': 'ಟೈಪ್ ಮಾಡುತ್ತಿದ್ದಾರೆ...',
+    'messages.noMessages': 'ಇನ್ನೂ ಸಂದೇಶಗಳಿಲ್ಲ',
+    'messages.startConversation': 'ಕೆಳಗೆ ಸಂದೇಶ ಕಳುಹಿಸಿ ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ!',
+    'messages.sharedImage': 'ಒಂದು ಚಿತ್ರವನ್ನು ಹಂಚಿಕೊಂಡರು',
+    'messages.clearAll': 'ಎಲ್ಲಾ ಸಂದೇಶಗಳನ್ನು ತೆರವುಗೊಳಿಸಿ',
+    'messages.groupChat': 'ಗ್ರಾಮ ಗುಂಪು ಚಾಟ್',
+    'messages.allCanChat': 'ಎಲ್ಲಾ ಗ್ರಾಮಸ್ಥರು ಮತ್ತು ಸರ್ಪಂಚ್ ಇಲ್ಲಿ ಚಾಟ್ ಮಾಡಬಹುದು',
+    
+    // SOS
+    'sos.title': 'SOS ವರದಿಗಳು',
+    'sos.create': 'SOS ವರದಿ ರಚಿಸಿ',
+    'sos.description': 'ವಿವರಣೆ',
+    'sos.location': 'ಸ್ಥಳ',
+    'sos.status': 'ಸ್ಥಿತಿ',
+    'sos.status.pending': 'ಬಾಕಿ',
+    'sos.status.acknowledged': 'ಒಪ್ಪಿಕೊಂಡಿದೆ',
+    'sos.status.resolved': 'ಪರಿಹರಿಸಲಾಗಿದೆ',
+    'sos.emergency': 'ತುರ್ತು',
+    'sos.reportCreated': 'SOS ವರದಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
+    'sos.statusUpdated': 'SOS ವರದಿ ಸ್ಥಿತಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+    
+    // Profile
+    'profile.title': 'ಪ್ರೊಫೈಲ್',
+    'profile.edit': 'ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ',
+    'profile.name': 'ಹೆಸರು',
+    'profile.phoneNumber': 'ಫೋನ್ ಸಂಖ್ಯೆ',
+    'profile.role': 'ಪಾತ್ರ',
+    'profile.village': 'ಗ್ರಾಮ',
+    'profile.pinCode': 'ಪಿನ್ ಕೋಡ್',
+    'profile.memberSince': 'ಸದಸ್ಯತ್ವದಿಂದ',
+    'profile.updateSuccess': 'ಪ್ರೊಫೈಲ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
+    
+    // Village
+    'village.title': 'ಗ್ರಾಮದ ಮಾಹಿತಿ',
+    'village.name': 'ಗ್ರಾಮದ ಹೆಸರು',
+    'village.state': 'ರಾಜ್ಯ',
+    'village.district': 'ಜಿಲ್ಲೆ',
+    'village.members': 'ಗ್ರಾಮದ ಸದಸ್ಯರು',
+    'village.sarpanch': 'ಸರ್ಪಂಚ್',
+    'village.villagers': 'ಗ್ರಾಮೀಣರು',
+    
+    // Navigation
+    'nav.dashboard': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
+    'nav.alerts': 'ಎಚ್ಚರಿಕೆಗಳು',
+    'nav.messages': 'ಸಂದೇಶಗಳು',
+    'nav.sos': 'SOS',
+    'nav.profile': 'ಪ್ರೊಫೈಲ್',
+    'nav.village': 'ಗ್ರಾಮ',
+    
+    // Errors
+    'error.network': 'ನೆಟ್‌ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ.',
+    'error.unauthorized': 'ಅನಧಿಕೃತ ಪ್ರವೇಶ.',
+    'error.forbidden': 'ಪ್ರವೇಶ ನಿಷೇಧಿಸಲಾಗಿದೆ.',
+    'error.notFound': 'ಸಂಪನ್ಮೂಲ ಕಂಡುಬಂದಿಲ್ಲ.',
+    'error.serverError': 'ಸರ್ವರ್ ದೋಷ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+    'error.validation': 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇನ್‌ಪುಟ್ ಅನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+  }
+}
+
+export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
+  const [language, setLanguage] = useState('en')
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language')
+    if (savedLanguage && translations[savedLanguage as keyof typeof translations]) {
+      setLanguage(savedLanguage)
+    }
+  }, [])
+
+  const handleSetLanguage = (lang: string) => {
+    setLanguage(lang)
+    localStorage.setItem('language', lang)
+  }
+
+  const t = (key: string): string => {
+    const currentTranslations = translations[language as keyof typeof translations] as any
+    return currentTranslations?.[key] || key
+  }
+
+  const value: LanguageContextType = {
+    language,
+    setLanguage: handleSetLanguage,
+    t
+  }
+
+  return (
+    <LanguageContext.Provider value={value}>
+      {children}
+    </LanguageContext.Provider>
+  )
+}
