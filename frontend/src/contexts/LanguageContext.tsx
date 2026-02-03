@@ -42,7 +42,7 @@ const translations = {
     'common.confirm': 'Confirm',
     'common.yes': 'Yes',
     'common.no': 'No',
-    
+
     // Auth
     'auth.login': 'Login',
     'auth.register': 'Register',
@@ -64,7 +64,7 @@ const translations = {
     'auth.otpVerified': 'Phone number verified successfully',
     'auth.invalidOTP': 'Invalid OTP',
     'auth.otpExpired': 'OTP expired',
-    
+
     // Dashboard
     'dashboard.title': 'Dashboard',
     'dashboard.welcome': 'Welcome',
@@ -75,7 +75,7 @@ const translations = {
     'dashboard.totalVillagers': 'Total Villagers',
     'dashboard.totalAlerts': 'Total Alerts',
     'dashboard.recentMessages': 'Recent Messages',
-    
+
     // Alerts
     'alerts.title': 'Alerts',
     'alerts.create': 'Create Alert',
@@ -101,7 +101,7 @@ const translations = {
     'alerts.delivered': 'Delivered',
     'alerts.failed': 'Failed',
     'alerts.pending': 'Pending',
-    
+
     // Messages
     'messages.title': 'Messages',
     'messages.new': 'New Message',
@@ -120,7 +120,7 @@ const translations = {
     'messages.clearAll': 'Clear All Messages',
     'messages.groupChat': 'Village Group Chat',
     'messages.allCanChat': 'All villagers and Sarpanch can chat here',
-    
+
     // SOS
     'sos.title': 'SOS Reports',
     'sos.create': 'Create SOS Report',
@@ -133,7 +133,7 @@ const translations = {
     'sos.emergency': 'Emergency',
     'sos.reportCreated': 'SOS report created successfully',
     'sos.statusUpdated': 'SOS report status updated',
-    
+
     // Profile
     'profile.title': 'Profile',
     'profile.edit': 'Edit Profile',
@@ -144,7 +144,7 @@ const translations = {
     'profile.pinCode': 'PIN Code',
     'profile.memberSince': 'Member Since',
     'profile.updateSuccess': 'Profile updated successfully',
-    
+
     // Village
     'village.title': 'Village Information',
     'village.name': 'Village Name',
@@ -153,7 +153,7 @@ const translations = {
     'village.members': 'Village Members',
     'village.sarpanch': 'Sarpanch',
     'village.villagers': 'Villagers',
-    
+
     // Navigation
     'nav.dashboard': 'Dashboard',
     'nav.alerts': 'Alerts',
@@ -161,7 +161,7 @@ const translations = {
     'nav.sos': 'SOS',
     'nav.profile': 'Profile',
     'nav.village': 'Village',
-    
+
     // Errors
     'error.network': 'Network error. Please check your connection.',
     'error.unauthorized': 'Unauthorized access.',
@@ -169,7 +169,7 @@ const translations = {
     'error.notFound': 'Resource not found.',
     'error.serverError': 'Server error. Please try again later.',
     'error.validation': 'Please check your input and try again.',
-    
+
     // Weather
     'weather.title': 'Agricultural Weather',
     'weather.subtitle': 'Crop forecasts & farming advice',
@@ -207,7 +207,7 @@ const translations = {
     'weather.pleaseEnterValidPincode': 'Please enter a valid PIN code (6 digits)',
     'weather.pleaseEnterValidCity': 'Please enter a valid city name',
     'weather.pleaseEnterValidCoordinates': 'Please enter valid coordinates',
-    
+
     // Weather Descriptions
     'weather.clearSky': 'Clear sky',
     'weather.mainlyClear': 'Mainly clear',
@@ -226,7 +226,7 @@ const translations = {
     'weather.thunderstorm': 'Thunderstorm',
     'weather.thunderstormHail': 'Thunderstorm with hail',
     'weather.thunderstormHeavyHail': 'Thunderstorm with heavy hail',
-    
+
     // AI Chat
     'ai.title': 'VillageVault AI',
     'ai.subtitle': 'Your intelligent assistant for village queries',
@@ -242,7 +242,7 @@ const translations = {
     'ai.thinking': 'Thinking...',
     'ai.error': 'Failed to send message. Please try again.',
   },
-  
+
   hi: {
     // Common
     'app.title': 'विलेजवॉल्ट',
@@ -264,7 +264,7 @@ const translations = {
     'common.confirm': 'पुष्टि करें',
     'common.yes': 'हाँ',
     'common.no': 'नहीं',
-    
+
     // Auth
     'auth.login': 'लॉगिन',
     'auth.register': 'रजिस्टर',
@@ -286,7 +286,7 @@ const translations = {
     'auth.otpVerified': 'फोन नंबर सफलतापूर्वक सत्यापित',
     'auth.invalidOTP': 'अमान्य ओटीपी',
     'auth.otpExpired': 'ओटीपी समाप्त',
-    
+
     // Dashboard
     'dashboard.title': 'डैशबोर्ड',
     'dashboard.welcome': 'स्वागत है',
@@ -297,7 +297,7 @@ const translations = {
     'dashboard.totalVillagers': 'कुल ग्रामीण',
     'dashboard.totalAlerts': 'कुल अलर्ट',
     'dashboard.recentMessages': 'हाल के संदेश',
-    
+
     // Alerts
     'alerts.title': 'अलर्ट',
     'alerts.create': 'अलर्ट बनाएं',
@@ -323,7 +323,7 @@ const translations = {
     'alerts.delivered': 'डिलीवर किया गया',
     'alerts.failed': 'असफल',
     'alerts.pending': 'लंबित',
-    
+
     // Messages
     'messages.title': 'संदेश',
     'messages.new': 'नया संदेश',
@@ -342,7 +342,7 @@ const translations = {
     'messages.clearAll': 'सभी संदेश साफ़ करें',
     'messages.groupChat': 'गाँव ग्रुप चैट',
     'messages.allCanChat': 'सभी ग्रामीण और सरपंच यहाँ चैट कर सकते हैं',
-    
+
     // SOS
     'sos.title': 'एसओएस रिपोर्ट',
     'sos.create': 'एसओएस रिपोर्ट बनाएं',
@@ -355,7 +355,7 @@ const translations = {
     'sos.emergency': 'आपातकाल',
     'sos.reportCreated': 'एसओएस रिपोर्ट सफलतापूर्वक बनाई गई',
     'sos.statusUpdated': 'एसओएस रिपोर्ट स्थिति अपडेट की गई',
-    
+
     // Profile
     'profile.title': 'प्रोफाइल',
     'profile.edit': 'प्रोफाइल संपादित करें',
@@ -366,7 +366,7 @@ const translations = {
     'profile.pinCode': 'पिन कोड',
     'profile.memberSince': 'सदस्यता से',
     'profile.updateSuccess': 'प्रोफाइल सफलतापूर्वक अपडेट किया गया',
-    
+
     // Village
     'village.title': 'गाँव की जानकारी',
     'village.name': 'गाँव का नाम',
@@ -375,7 +375,7 @@ const translations = {
     'village.members': 'गाँव के सदस्य',
     'village.sarpanch': 'सरपंच',
     'village.villagers': 'ग्रामीण',
-    
+
     // Navigation
     'nav.dashboard': 'डैशबोर्ड',
     'nav.alerts': 'अलर्ट',
@@ -383,7 +383,7 @@ const translations = {
     'nav.sos': 'एसओएस',
     'nav.profile': 'प्रोफाइल',
     'nav.village': 'गाँव',
-    
+
     // Errors
     'error.network': 'नेटवर्क त्रुटि। कृपया अपना कनेक्शन जांचें।',
     'error.unauthorized': 'अनधिकृत पहुंच।',
@@ -391,7 +391,7 @@ const translations = {
     'error.notFound': 'संसाधन नहीं मिला।',
     'error.serverError': 'सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।',
     'error.validation': 'कृपया अपना इनपुट जांचें और पुनः प्रयास करें।',
-    
+
     // Weather
     'weather.title': 'कृषि मौसम',
     'weather.subtitle': 'फसल पूर्वानुमान और कृषि सलाह',
@@ -429,7 +429,7 @@ const translations = {
     'weather.pleaseEnterValidPincode': 'कृपया एक वैध पिन कोड (6 अंक) दर्ज करें',
     'weather.pleaseEnterValidCity': 'कृपया एक वैध शहर का नाम दर्ज करें',
     'weather.pleaseEnterValidCoordinates': 'कृपया वैध निर्देशांक दर्ज करें',
-    
+
     // Weather Descriptions
     'weather.clearSky': 'साफ आकाश',
     'weather.mainlyClear': 'मुख्य रूप से साफ',
@@ -448,7 +448,7 @@ const translations = {
     'weather.thunderstorm': 'तूफान',
     'weather.thunderstormHail': 'ओलावृष्टि के साथ तूफान',
     'weather.thunderstormHeavyHail': 'भारी ओलावृष्टि के साथ तूफान',
-    
+
     // AI Chat
     'ai.title': 'विलेजवॉल्ट AI',
     'ai.subtitle': 'गांव प्रश्नों के लिए आपका बुद्धिमान सहायक',
@@ -464,7 +464,7 @@ const translations = {
     'ai.thinking': 'सोच रहे हैं...',
     'ai.error': 'संदेश भेजने में विफल। कृपया पुनः प्रयास करें।',
   },
-  
+
   te: {
     // Common
     'app.title': 'విలేజ్‌వాల్ట్',
@@ -486,7 +486,7 @@ const translations = {
     'common.confirm': 'నిర్ధారించండి',
     'common.yes': 'అవును',
     'common.no': 'కాదు',
-    
+
     // Auth
     'auth.login': 'లాగిన్',
     'auth.register': 'నమోదు',
@@ -508,7 +508,7 @@ const translations = {
     'auth.otpVerified': 'ఫోన్ నంబర్ విజయవంతంగా ధృవీకరించబడింది',
     'auth.invalidOTP': 'చెల్లని ఓటిపి',
     'auth.otpExpired': 'ఓటిపి గడువు ముగిసింది',
-    
+
     // Dashboard
     'dashboard.title': 'డ్యాష్‌బోర్డ్',
     'dashboard.welcome': 'స్వాగతం',
@@ -519,7 +519,7 @@ const translations = {
     'dashboard.totalVillagers': 'మొత్తం గ్రామీణులు',
     'dashboard.totalAlerts': 'మొత్తం అలర్ట్‌లు',
     'dashboard.recentMessages': 'ఇటీవలి సందేశాలు',
-    
+
     // Alerts
     'alerts.title': 'అలర్ట్‌లు',
     'alerts.create': 'అలర్ట్ సృష్టించండి',
@@ -545,7 +545,7 @@ const translations = {
     'alerts.delivered': 'డెలివర్ చేయబడింది',
     'alerts.failed': 'విఫలం',
     'alerts.pending': 'పెండింగ్',
-    
+
     // Messages
     'messages.title': 'సందేశాలు',
     'messages.new': 'కొత్త సందేశం',
@@ -564,7 +564,7 @@ const translations = {
     'messages.clearAll': 'అన్ని సందేశాలను క్లియర్ చేయండి',
     'messages.groupChat': 'గ్రామ గ్రూప్ చాట్',
     'messages.allCanChat': 'అన్ని గ్రామస్తులు మరియు సర్పంచ్ ఇక్కడ చాట్ చేయవచ్చు',
-    
+
     // SOS
     'sos.title': 'ఎస్‌ఓఎస్ నివేదికలు',
     'sos.create': 'ఎస్‌ఓఎస్ నివేదిక సృష్టించండి',
@@ -577,7 +577,7 @@ const translations = {
     'sos.emergency': 'అత్యవసర',
     'sos.reportCreated': 'ఎస్‌ఓఎస్ నివేదిక విజయవంతంగా సృష్టించబడింది',
     'sos.statusUpdated': 'ఎస్‌ఓఎస్ నివేదిక స్థితి అప్‌డేట్ చేయబడింది',
-    
+
     // Profile
     'profile.title': 'ప్రొఫైల్',
     'profile.edit': 'ప్రొఫైల్ సవరించండి',
@@ -588,7 +588,7 @@ const translations = {
     'profile.pinCode': 'పిన్ కోడ్',
     'profile.memberSince': 'సభ్యత్వం నుండి',
     'profile.updateSuccess': 'ప్రొఫైల్ విజయవంతంగా అప్‌డేట్ చేయబడింది',
-    
+
     // Village
     'village.title': 'గ్రామ సమాచారం',
     'village.name': 'గ్రామం పేరు',
@@ -597,7 +597,7 @@ const translations = {
     'village.members': 'గ్రామ సభ్యులు',
     'village.sarpanch': 'సర్పంచ్',
     'village.villagers': 'గ్రామీణులు',
-    
+
     // Navigation
     'nav.dashboard': 'డ్యాష్‌బోర్డ్',
     'nav.alerts': 'అలర్ట్‌లు',
@@ -605,7 +605,7 @@ const translations = {
     'nav.sos': 'ఎస్‌ఓఎస్',
     'nav.profile': 'ప్రొఫైల్',
     'nav.village': 'గ్రామం',
-    
+
     // Errors
     'error.network': 'నెట్‌వర్క్ లోపం. దయచేసి మీ కనెక్షన్‌ను తనిఖీ చేయండి.',
     'error.unauthorized': 'అనధికార ప్రవేశం.',
@@ -613,7 +613,7 @@ const translations = {
     'error.notFound': 'వనరు కనుగొనబడలేదు.',
     'error.serverError': 'సర్వర్ లోపం. దయచేసి తర్వాత మళ్లీ ప్రయత్నించండి.',
     'error.validation': 'దయచేసి మీ ఇన్‌పుట్‌ను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.',
-    
+
     // Weather
     'weather.title': 'వ్యవసాయ వాతావరణం',
     'weather.subtitle': 'పంట అంచనాలు మరియు వ్యవసాయ సలహాలు',
@@ -651,7 +651,7 @@ const translations = {
     'weather.pleaseEnterValidPincode': 'దయచేసి చెల్లుబాటు అయ్యే పిన్ కోడ్ (6 అంకెలు) నమోదు చేయండి',
     'weather.pleaseEnterValidCity': 'దయచేసి చెల్లుబాటు అయ్యే నగరం పేరు నమోదు చేయండి',
     'weather.pleaseEnterValidCoordinates': 'దయచేసి చెల్లుబాటు అయ్యే కోఆర్డినేట్లను నమోదు చేయండి',
-    
+
     // Weather Descriptions
     'weather.clearSky': 'స్పష్టమైన ఆకాశం',
     'weather.mainlyClear': 'ప్రధానంగా స్పష్టం',
@@ -670,7 +670,7 @@ const translations = {
     'weather.thunderstorm': 'ఉరుములు',
     'weather.thunderstormHail': 'వడగండ్లతో ఉరుములు',
     'weather.thunderstormHeavyHail': 'భారీ వడగండ్లతో ఉరుములు',
-    
+
     // AI Chat
     'ai.title': 'విలేజ్‌వాల్ట్ AI',
     'ai.subtitle': 'గ్రామ ప్రశ్నలకు మీ తెలివైన సహాయకుడు',
@@ -686,7 +686,7 @@ const translations = {
     'ai.thinking': 'ఆలోచిస్తోంది...',
     'ai.error': 'సందేశం పంపడంలో విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.',
   },
-  
+
   ta: {
     // Common
     'app.title': 'வில்லேஜ்வால்ட்',
@@ -708,7 +708,7 @@ const translations = {
     'common.confirm': 'உறுதிப்படுத்து',
     'common.yes': 'ஆம்',
     'common.no': 'இல்லை',
-    
+
     // Auth
     'auth.login': 'உள்நுழைவு',
     'auth.register': 'பதிவு',
@@ -730,7 +730,7 @@ const translations = {
     'auth.otpVerified': 'தொலைபேசி எண் வெற்றிகரமாக சரிபார்க்கப்பட்டது',
     'auth.invalidOTP': 'தவறான OTP',
     'auth.otpExpired': 'OTP காலாவதியானது',
-    
+
     // Dashboard
     'dashboard.title': 'டாஷ்போர்டு',
     'dashboard.welcome': 'வரவேற்கிறோம்',
@@ -741,7 +741,7 @@ const translations = {
     'dashboard.totalVillagers': 'மொத்த கிராமவாசிகள்',
     'dashboard.totalAlerts': 'மொத்த எச்சரிக்கைகள்',
     'dashboard.recentMessages': 'சமீபத்திய செய்திகள்',
-    
+
     // Alerts
     'alerts.title': 'எச்சரிக்கைகள்',
     'alerts.create': 'எச்சரிக்கை உருவாக்கு',
@@ -767,7 +767,7 @@ const translations = {
     'alerts.delivered': 'வழங்கப்பட்டது',
     'alerts.failed': 'தோல்வி',
     'alerts.pending': 'நிலுவையில்',
-    
+
     // Messages
     'messages.title': 'செய்திகள்',
     'messages.new': 'புதிய செய்தி',
@@ -786,7 +786,7 @@ const translations = {
     'messages.clearAll': 'அனைத்து செய்திகளையும் அழிக்கவும்',
     'messages.groupChat': 'கிராம குழு அரட்டை',
     'messages.allCanChat': 'அனைத்து கிராமவாசிகளும் சர்பஞ்சும் இங்கே அரட்டை அடிக்கலாம்',
-    
+
     // SOS
     'sos.title': 'SOS அறிக்கைகள்',
     'sos.create': 'SOS அறிக்கை உருவாக்கு',
@@ -799,7 +799,7 @@ const translations = {
     'sos.emergency': 'அவசர',
     'sos.reportCreated': 'SOS அறிக்கை வெற்றிகரமாக உருவாக்கப்பட்டது',
     'sos.statusUpdated': 'SOS அறிக்கை நிலை புதுப்பிக்கப்பட்டது',
-    
+
     // Profile
     'profile.title': 'சுயவிவரம்',
     'profile.edit': 'சுயவிவரத்தை திருத்து',
@@ -810,7 +810,7 @@ const translations = {
     'profile.pinCode': 'பின் குறியீடு',
     'profile.memberSince': 'உறுப்பினர் முதல்',
     'profile.updateSuccess': 'சுயவிவரம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது',
-    
+
     // Village
     'village.title': 'கிராம தகவல்',
     'village.name': 'கிராமத்தின் பெயர்',
@@ -819,7 +819,7 @@ const translations = {
     'village.members': 'கிராம உறுப்பினர்கள்',
     'village.sarpanch': 'சர்பஞ்ச்',
     'village.villagers': 'கிராமவாசிகள்',
-    
+
     // Navigation
     'nav.dashboard': 'டாஷ்போர்டு',
     'nav.alerts': 'எச்சரிக்கைகள்',
@@ -827,7 +827,7 @@ const translations = {
     'nav.sos': 'SOS',
     'nav.profile': 'சுயவிவரம்',
     'nav.village': 'கிராமம்',
-    
+
     // Errors
     'error.network': 'நெட்வொர்க் பிழை. தயவுசெய்து உங்கள் இணைப்பை சரிபார்க்கவும்.',
     'error.unauthorized': 'அனுமதியற்ற அணுகல்.',
@@ -835,7 +835,7 @@ const translations = {
     'error.notFound': 'வளம் கிடைக்கவில்லை.',
     'error.serverError': 'சர்வர் பிழை. தயவுசெய்து பின்னர் மீண்டும் முயற்சிக்கவும்.',
     'error.validation': 'தயவுசெய்து உங்கள் உள்ளீட்டை சரிபார்த்து மீண்டும் முயற்சிக்கவும்.',
-    
+
     // Weather
     'weather.title': 'விவசாய வானிலை',
     'weather.subtitle': 'பயிர் முன்னறிவிப்புகள் மற்றும் விவசாய ஆலோசனைகள்',
@@ -873,7 +873,7 @@ const translations = {
     'weather.pleaseEnterValidPincode': 'தயவுசெய்து சரியான பின் குறியீடு (6 இலக்கங்கள்) உள்ளிடவும்',
     'weather.pleaseEnterValidCity': 'தயவுசெய்து சரியான நகரப் பெயரை உள்ளிடவும்',
     'weather.pleaseEnterValidCoordinates': 'தயவுசெய்து சரியான ஆயத்தொலைவுகளை உள்ளிடவும்',
-    
+
     // Weather Descriptions
     'weather.clearSky': 'தெளிவான வானம்',
     'weather.mainlyClear': 'பெரும்பாலும் தெளிவானது',
@@ -892,7 +892,7 @@ const translations = {
     'weather.thunderstorm': 'இடி மழை',
     'weather.thunderstormHail': 'கல்மழையுடன் இடி மழை',
     'weather.thunderstormHeavyHail': 'கனமான கல்மழையுடன் இடி மழை',
-    
+
     // AI Chat
     'ai.title': 'வில்லேஜ்வால்ட் AI',
     'ai.subtitle': 'கிராம கேள்விகளுக்கான உங்கள் புலனுணர்வு உதவியாளர்',
@@ -908,7 +908,7 @@ const translations = {
     'ai.thinking': 'சிந்திக்கிறது...',
     'ai.error': 'செய்தியை அனுப்ப முடியவில்லை. தயவுசெய்து மீண்டும் முயற்சிக்கவும்.',
   },
-  
+
   kn: {
     // Common
     'app.title': 'ವಿಲೇಜ್‌ವಾಲ್ಟ್',
@@ -930,7 +930,7 @@ const translations = {
     'common.confirm': 'ದೃಢೀಕರಿಸಿ',
     'common.yes': 'ಹೌದು',
     'common.no': 'ಇಲ್ಲ',
-    
+
     // Auth
     'auth.login': 'ಲಾಗಿನ್',
     'auth.register': 'ನೋಂದಣಿ',
@@ -952,7 +952,7 @@ const translations = {
     'auth.otpVerified': 'ಫೋನ್ ಸಂಖ್ಯೆ ಯಶಸ್ವಿಯಾಗಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ',
     'auth.invalidOTP': 'ಅಮಾನ್ಯ OTP',
     'auth.otpExpired': 'OTP ಅವಧಿ ಮುಗಿದಿದೆ',
-    
+
     // Dashboard
     'dashboard.title': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
     'dashboard.welcome': 'ಸ್ವಾಗತ',
@@ -963,7 +963,7 @@ const translations = {
     'dashboard.totalVillagers': 'ಒಟ್ಟು ಗ್ರಾಮೀಣರು',
     'dashboard.totalAlerts': 'ಒಟ್ಟು ಎಚ್ಚರಿಕೆಗಳು',
     'dashboard.recentMessages': 'ಇತ್ತೀಚಿನ ಸಂದೇಶಗಳು',
-    
+
     // Alerts
     'alerts.title': 'ಎಚ್ಚರಿಕೆಗಳು',
     'alerts.create': 'ಎಚ್ಚರಿಕೆ ರಚಿಸಿ',
@@ -989,7 +989,7 @@ const translations = {
     'alerts.delivered': 'ವಿತರಿಸಲಾಗಿದೆ',
     'alerts.failed': 'ವಿಫಲ',
     'alerts.pending': 'ಬಾಕಿ',
-    
+
     // Messages
     'messages.title': 'ಸಂದೇಶಗಳು',
     'messages.new': 'ಹೊಸ ಸಂದೇಶ',
@@ -1008,7 +1008,7 @@ const translations = {
     'messages.clearAll': 'ಎಲ್ಲಾ ಸಂದೇಶಗಳನ್ನು ತೆರವುಗೊಳಿಸಿ',
     'messages.groupChat': 'ಗ್ರಾಮ ಗುಂಪು ಚಾಟ್',
     'messages.allCanChat': 'ಎಲ್ಲಾ ಗ್ರಾಮಸ್ಥರು ಮತ್ತು ಸರ್ಪಂಚ್ ಇಲ್ಲಿ ಚಾಟ್ ಮಾಡಬಹುದು',
-    
+
     // SOS
     'sos.title': 'SOS ವರದಿಗಳು',
     'sos.create': 'SOS ವರದಿ ರಚಿಸಿ',
@@ -1021,7 +1021,7 @@ const translations = {
     'sos.emergency': 'ತುರ್ತು',
     'sos.reportCreated': 'SOS ವರದಿ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
     'sos.statusUpdated': 'SOS ವರದಿ ಸ್ಥಿತಿ ನವೀಕರಿಸಲಾಗಿದೆ',
-    
+
     // Profile
     'profile.title': 'ಪ್ರೊಫೈಲ್',
     'profile.edit': 'ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ',
@@ -1032,7 +1032,7 @@ const translations = {
     'profile.pinCode': 'ಪಿನ್ ಕೋಡ್',
     'profile.memberSince': 'ಸದಸ್ಯತ್ವದಿಂದ',
     'profile.updateSuccess': 'ಪ್ರೊಫೈಲ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
-    
+
     // Village
     'village.title': 'ಗ್ರಾಮದ ಮಾಹಿತಿ',
     'village.name': 'ಗ್ರಾಮದ ಹೆಸರು',
@@ -1041,7 +1041,7 @@ const translations = {
     'village.members': 'ಗ್ರಾಮದ ಸದಸ್ಯರು',
     'village.sarpanch': 'ಸರ್ಪಂಚ್',
     'village.villagers': 'ಗ್ರಾಮೀಣರು',
-    
+
     // Navigation
     'nav.dashboard': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
     'nav.alerts': 'ಎಚ್ಚರಿಕೆಗಳು',
@@ -1049,7 +1049,7 @@ const translations = {
     'nav.sos': 'SOS',
     'nav.profile': 'ಪ್ರೊಫೈಲ್',
     'nav.village': 'ಗ್ರಾಮ',
-    
+
     // Errors
     'error.network': 'ನೆಟ್‌ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ.',
     'error.unauthorized': 'ಅನಧಿಕೃತ ಪ್ರವೇಶ.',
@@ -1057,7 +1057,7 @@ const translations = {
     'error.notFound': 'ಸಂಪನ್ಮೂಲ ಕಂಡುಬಂದಿಲ್ಲ.',
     'error.serverError': 'ಸರ್ವರ್ ದೋಷ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
     'error.validation': 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇನ್‌ಪುಟ್ ಅನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
-    
+
     // Weather
     'weather.title': 'ವ್ಯವಸಾಯದ ವಾತಾವರಣ',
     'weather.subtitle': 'ಬೆಳೆ ಮುನ್ಸೂಚನೆಗಳು ಮತ್ತು ಕೃಷಿ ಸಲಹೆಗಳು',
@@ -1095,7 +1095,7 @@ const translations = {
     'weather.pleaseEnterValidPincode': 'ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ಪಿನ್ ಕೋಡ್ (6 ಅಂಕೆಗಳು) ನಮೂದಿಸಿ',
     'weather.pleaseEnterValidCity': 'ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ನಗರದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ',
     'weather.pleaseEnterValidCoordinates': 'ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ನಿರ್ದೇಶಾಂಕಗಳನ್ನು ನಮೂದಿಸಿ',
-    
+
     // Weather Descriptions
     'weather.clearSky': 'ಸ್ಪಷ್ಟವಾದ ಆಕಾಶ',
     'weather.mainlyClear': 'ಮುಖ್ಯವಾಗಿ ಸ್ಪಷ್ಟ',
@@ -1114,7 +1114,7 @@ const translations = {
     'weather.thunderstorm': 'ಕುಡುಗೋಲು ಮಳೆ',
     'weather.thunderstormHail': 'ಆಲಿಕಲ್ಲಿನೊಂದಿಗೆ ಕುಡುಗೋಲು ಮಳೆ',
     'weather.thunderstormHeavyHail': 'ಭಾರೀ ಆಲಿಕಲ್ಲಿನೊಂದಿಗೆ ಕುಡುಗೋಲು ಮಳೆ',
-    
+
     // AI Chat
     'ai.title': 'ವಿಲೇಜ್‌ವಾಲ್ಟ್ AI',
     'ai.subtitle': 'ಗ್ರಾಮ ಪ್ರಶ್ನೆಗಳಿಗಾಗಿ ನಿಮ್ಮ ಬುದ್ಧಿವಂತ ಸಹಾಯಕ',

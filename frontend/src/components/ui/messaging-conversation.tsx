@@ -46,13 +46,13 @@ function StatusBadge({ status }: { status: StatusType }) {
 }
 
 // Message actions block (for single message, on hover)
-function MessageActions({ 
-  isMe, 
-  onReply, 
-  onCopy, 
-  onDelete, 
-  onReport 
-}: { 
+function MessageActions({
+  isMe,
+  onReply,
+  onCopy,
+  onDelete,
+  onReport
+}: {
   isMe: boolean
   onReply?: () => void
   onCopy?: () => void
@@ -210,7 +210,7 @@ export default function MessagingConversation({
 
     // Sanitize and validate message
     const sanitizedMessage = sanitizeText(newMessage.trim())
-    
+
     if (!sanitizedMessage) {
       toast.error('Message cannot be empty')
       return
@@ -229,7 +229,7 @@ export default function MessagingConversation({
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file || !onSendImage) return
-    
+
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
     if (!allowedTypes.includes(file.type)) {
@@ -252,7 +252,7 @@ export default function MessagingConversation({
 
   const handleCopy = async (text: string) => {
     if (!text) return
-    
+
     try {
       await navigator.clipboard.writeText(text)
       toast.success('Message copied to clipboard')
@@ -264,11 +264,11 @@ export default function MessagingConversation({
 
   const handleDelete = async (messageId: string) => {
     if (!onDeleteMessage) return
-    
+
     // Confirm before deleting
     const confirmed = window.confirm('Are you sure you want to delete this message? This action cannot be undone.')
     if (!confirmed) return
-    
+
     onDeleteMessage(messageId)
   }
 
@@ -279,16 +279,16 @@ export default function MessagingConversation({
 
   const formatMessageTime = (timestamp: string): string => {
     if (formatTime) return formatTime(timestamp)
-    
+
     try {
       const date = new Date(timestamp)
       if (isNaN(date.getTime())) return "Just now"
-      
+
       const now = new Date()
       const diffInSeconds = (now.getTime() - date.getTime()) / 1000
       const diffInMinutes = diffInSeconds / 60
       const diffInHours = diffInMinutes / 60
-      
+
       if (diffInSeconds < 60) {
         return "Just now"
       } else if (diffInMinutes < 60) {
@@ -327,9 +327,9 @@ export default function MessagingConversation({
         <div className="flex items-center gap-3 pt-1">
           <div className="relative">
             <Avatar className="size-10">
-              <AvatarImage 
-                alt={otherUser?.name || "Village Chat"} 
-                src={otherUser?.avatar || getAvatarUrl(otherUser?.name || "Village", "CHAT")} 
+              <AvatarImage
+                alt={otherUser?.name || "Village Chat"}
+                src={otherUser?.avatar || getAvatarUrl(otherUser?.name || "Village", "CHAT")}
               />
               <AvatarFallback>
                 {(otherUser?.name || "VC")[0].toUpperCase()}
@@ -381,7 +381,7 @@ export default function MessagingConversation({
             messages.map((msg) => {
               // Sarpanch messages go to the right, Villagers to the left
               const isRightSide = isMessageOnRight(msg)
-              
+
               return (
                 <div
                   className={cn(
@@ -408,10 +408,11 @@ export default function MessagingConversation({
                     <div>
                       <div
                         className={cn(
-                          "rounded-md px-3 py-2 text-sm shadow-sm",
-                          isRightSide
+                          "rounded-md text-sm shadow-sm",
+                          msg.type === 'IMAGE' ? "p-0 bg-transparent shadow-none" : "px-3 py-2",
+                          msg.type !== 'IMAGE' && (isRightSide
                             ? "bg-green-600 text-white" // Sarpanch messages - dark green on right
-                            : "bg-gray-200 text-gray-900" // Villager messages - light gray on left
+                            : "bg-gray-200 text-gray-900") // Villager messages - light gray on left
                         )}
                       >
                         {/* Sender name for group chat (only show for left side messages) */}
@@ -423,7 +424,7 @@ export default function MessagingConversation({
                             )}
                           </div>
                         )}
-                        
+
                         {/* Message content */}
                         {msg.type === 'TEXT' && (
                           <p className="break-words">{msg.content}</p>
@@ -433,7 +434,7 @@ export default function MessagingConversation({
                             <img
                               src={msg.imageUrl}
                               alt="Shared image"
-                              className="max-w-full h-auto rounded-lg cursor-pointer hover:opacity-90 transition-opacity mt-2"
+                              className="max-w-full h-auto rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                               onClick={() => window.open(msg.imageUrl, '_blank')}
                             />
                           </div>

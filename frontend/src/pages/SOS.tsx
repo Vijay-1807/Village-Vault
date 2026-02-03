@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useSocket } from '../contexts/SocketContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import { api } from '../services/api'
 import { geolocationService, SOSLocationData } from '../services/geolocationService'
@@ -56,15 +57,39 @@ const SOS = () => {
   const [aiAnalysis, setAiAnalysis] = useState<string | null>(null)
   const [analyzingWithAI, setAnalyzingWithAI] = useState(false)
 
+  const { socket, isConnected } = useSocket()
+
   useEffect(() => {
     fetchSOSReports()
   }, [])
+
+  // Real-time updates
+  useEffect(() => {
+    if (socket && isConnected) {
+      socket.on('newSOS', (newReport) => {
+        // Optimistically add to list or fetch fresh
+        // For simplicity and to ensure sorted order/normalized data, fetching fresh is safer unless we normalize here
+        fetchSOSReports()
+      })
+
+      socket.on('sosStatusUpdate', ({ reportId, status }) => {
+        setSosReports(prev => prev.map(report =>
+          report.id === reportId ? { ...report, status } : report
+        ))
+      })
+
+      return () => {
+        socket.off('newSOS')
+        socket.off('sosStatusUpdate')
+      }
+    }
+  }, [socket, isConnected])
 
   const fetchSOSReports = async () => {
     try {
       const response = await api.get('/sos')
       const sosReports = response.data.data.sosReports || []
-      
+
       // Normalize SOS reports data to ensure all required fields exist
       const normalizedReports = sosReports.map((report: any) => ({
         ...report,
@@ -78,7 +103,7 @@ const SOS = () => {
         priority: report.priority || 'MEDIUM',
         status: report.status || 'PENDING'
       }))
-      
+
       setSosReports(normalizedReports)
     } catch (error) {
       console.error('Failed to fetch SOS reports:', error)
@@ -96,13 +121,13 @@ const SOS = () => {
         newSOS.priority === 'EMERGENCY' ? 'high' : 'medium',
         newSOS.description
       )
-      
+
       setLocationData(location)
       setNewSOS(prev => ({
         ...prev,
         location: geolocationService.formatLocation(location)
       }))
-      
+
       alertService.success('Location captured successfully')
     } catch (error: any) {
       console.error('Location error:', error)
@@ -136,7 +161,7 @@ const SOS = () => {
 
       await api.post('/sos', sosData)
       alertService.success(t('sos.reportCreated'))
-      
+
       setShowCreateForm(false)
       setNewSOS({
         description: '',
@@ -187,6 +212,25 @@ const SOS = () => {
     } finally {
       setUpdateLoading(null)
     }
+  }
+
+  const formatDate = (dateInput: any) => {
+    if (!dateInput) return 'Unknown Date';
+
+    let date: Date;
+
+    // Handle Firestore Timestamp
+    if (dateInput?.seconds) {
+      date = new Date(dateInput.seconds * 1000);
+    } else if (dateInput?._seconds) {
+      date = new Date(dateInput._seconds * 1000);
+    } else {
+      date = new Date(dateInput);
+    }
+
+    if (isNaN(date.getTime())) return 'Invalid Date';
+
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
   }
 
   const getPriorityColor = (priority: string) => {
@@ -269,15 +313,15 @@ const SOS = () => {
               {sosReports.length > 0 && (
                 <div className="mt-2 flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm">
                   <span className="text-gray-600">
-                    <span className="font-semibold text-red-600">{sosReports.filter(r => r.status === 'pending').length}</span> Pending
+                    <span className="font-semibold text-red-600">{sosReports.filter(r => r.status === 'PENDING').length}</span> Pending
                   </span>
                   <span className="hidden sm:inline text-gray-400">•</span>
                   <span className="text-gray-600">
-                    <span className="font-semibold text-blue-600">{sosReports.filter(r => r.status === 'acknowledged').length}</span> Acknowledged
+                    <span className="font-semibold text-blue-600">{sosReports.filter(r => r.status === 'ACKNOWLEDGED').length}</span> Acknowledged
                   </span>
                   <span className="hidden sm:inline text-gray-400">•</span>
                   <span className="text-gray-600">
-                    <span className="font-semibold text-green-600">{sosReports.filter(r => r.status === 'resolved').length}</span> Resolved
+                    <span className="font-semibold text-green-600">{sosReports.filter(r => r.status === 'RESOLVED').length}</span> Resolved
                   </span>
                 </div>
               )}
@@ -406,7 +450,7 @@ const SOS = () => {
                   {analyzingWithAI ? 'Analyzing...' : 'Analyze with AI'}
                 </button>
               </div>
-              
+
               {aiAnalysis && (
                 <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
                   <div className="flex items-start space-x-2">
@@ -463,11 +507,11 @@ const SOS = () => {
                             {getStatusText(report.status)}
                           </span>
                         </div>
-                        
+
                         {report.description && (
                           <p className="text-sm sm:text-base text-gray-800 leading-relaxed font-medium break-words">{report.description}</p>
                         )}
-                        
+
                         {report.location && (
                           <p className="mt-2 text-xs sm:text-sm text-gray-600 break-words">
                             <span className="font-semibold text-gray-700">📍 Location:</span> {report.location}
@@ -482,10 +526,8 @@ const SOS = () => {
                           <span className="hidden sm:inline">•</span>
                           <span className="flex items-center">
                             <Clock className="h-3 w-3 mr-1" />
-                            {new Date(report.createdAt).toLocaleDateString()}
+                            {formatDate(report.createdAt)}
                           </span>
-                          <span className="hidden sm:inline">•</span>
-                          <span>{new Date(report.createdAt).toLocaleTimeString()}</span>
                         </div>
                       </div>
                     </div>
@@ -499,13 +541,13 @@ const SOS = () => {
                         {getStatusText(report.status)}
                       </span>
                     </div>
-                    
+
                     {/* Action Buttons */}
-                    {user?.role === 'SARPANCH' && report.status !== 'resolved' && (
+                    {user?.role === 'SARPANCH' && report.status !== 'RESOLVED' && (
                       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
-                        {report.status === 'pending' && (
+                        {report.status === 'PENDING' && (
                           <button
-                            onClick={() => handleUpdateStatus(report.id, 'acknowledged')}
+                            onClick={() => handleUpdateStatus(report.id, 'ACKNOWLEDGED')}
                             disabled={updateLoading === report.id}
                             className="flex items-center justify-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-blue-700 bg-blue-100 rounded-xl hover:bg-blue-200 disabled:opacity-50 transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto"
                           >
@@ -517,9 +559,9 @@ const SOS = () => {
                             Acknowledge
                           </button>
                         )}
-                        {report.status === 'acknowledged' && (
+                        {report.status === 'ACKNOWLEDGED' && (
                           <button
-                            onClick={() => handleUpdateStatus(report.id, 'resolved')}
+                            onClick={() => handleUpdateStatus(report.id, 'RESOLVED')}
                             disabled={updateLoading === report.id}
                             className="flex items-center justify-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-green-700 bg-green-100 rounded-xl hover:bg-green-200 disabled:opacity-50 transition-all duration-300 shadow-sm hover:shadow-md w-full sm:w-auto"
                           >
@@ -533,9 +575,9 @@ const SOS = () => {
                         )}
                       </div>
                     )}
-                    
+
                     {/* Show message for non-Sarpanch users */}
-                    {user?.role !== 'SARPANCH' && report.status === 'pending' && (
+                    {user?.role !== 'SARPANCH' && report.status === 'PENDING' && (
                       <div className="text-xs sm:text-sm text-gray-500 italic">
                         Waiting for village administration response
                       </div>

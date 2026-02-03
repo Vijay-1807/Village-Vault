@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useSocket } from '../contexts/SocketContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import { api } from '../services/api'
 import { AlertTriangle, Clock, UserCheck, Bell, PhoneCall, Mail, RefreshCw } from 'lucide-react'
@@ -30,20 +31,53 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
 
+  const { socket, isConnected } = useSocket()
+
   useEffect(() => {
     fetchDashboardData()
-    
-    // Auto-refresh dashboard data every 30 seconds
-    const interval = setInterval(fetchDashboardData, 30000)
-    
-    return () => clearInterval(interval)
   }, [])
+
+  // Real-time updates via Socket.IO
+  useEffect(() => {
+    if (socket && isConnected) {
+      // Listen for dashboard stats updates
+      socket.on('dashboardStatsUpdate', (newStats: DashboardStats) => {
+        setStats(newStats)
+      })
+
+      // Listen for new alerts to update the recent alerts list
+      socket.on('newAlert', (newAlert: any) => {
+        setRecentAlerts(prev => {
+          const updated = [newAlert, ...prev].slice(0, 5) // Keep only recent 5
+          return updated
+        })
+        // Also refresh stats when new alert comes in
+        fetchDashboardData()
+      })
+
+      // Listen for SOS updates to refresh stats
+      socket.on('sosAlert', () => {
+        fetchDashboardData()
+      })
+
+      socket.on('sosStatusUpdate', () => {
+        fetchDashboardData()
+      })
+
+      return () => {
+        socket.off('dashboardStatsUpdate')
+        socket.off('newAlert')
+        socket.off('sosAlert')
+        socket.off('sosStatusUpdate')
+      }
+    }
+  }, [socket, isConnected])
 
   const fetchDashboardData = async (isManualRefresh = false) => {
     if (isManualRefresh) {
       setRefreshing(true)
     }
-    
+
     try {
       const [statsResponse, alertsResponse] = await Promise.all([
         api.get('/users/village/stats'),
@@ -81,7 +115,7 @@ const Dashboard = () => {
         recentMessages: 0
       })
       setRecentAlerts([])
-      
+
       // Show error toast only on manual refresh
       if (isManualRefresh) {
         toast.error('Failed to refresh dashboard data. Please try again.')

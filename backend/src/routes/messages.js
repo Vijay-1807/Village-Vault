@@ -1,6 +1,7 @@
 const express = require('express');
 const { authenticate } = require('../middleware/auth');
 const firebaseService = require('../services/firebaseService');
+const mediaService = require('../services/mediaService');
 const Joi = require('joi');
 const multer = require('multer');
 const path = require('path');
@@ -41,11 +42,11 @@ router.get('/', authenticate, async (req, res) => {
   try {
     console.log('Messages route - Getting messages, user:', req.user);
     const limit = parseInt(req.query.limit) || 50;
-    
+
     // Get real messages from Firestore
     const messages = await firebaseService.getMessages(limit);
     console.log('Messages route - Retrieved messages from Firestore:', messages.length);
-    
+
     res.json({
       success: true,
       data: { messages }
@@ -65,7 +66,7 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const message = await firebaseService.getMessageById(id);
-    
+
     res.json({
       success: true,
       data: { message }
@@ -94,9 +95,9 @@ router.post('/', authenticate, upload.single('image'), async (req, res) => {
     if (req.file) {
       // Image message - upload to Firebase Storage
       try {
-        const fileName = `message-${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(req.file.originalname)}`;
-        const imageUrl = await firebaseService.uploadImage(req.file, fileName);
-        
+        // Upload to Cloudinary
+        const imageUrl = await mediaService.uploadImage(req.file);
+
         messageData.type = 'IMAGE';
         messageData.imageUrl = imageUrl;
         messageData.content = 'Shared an image';
@@ -122,7 +123,7 @@ router.post('/', authenticate, upload.single('image'), async (req, res) => {
     // Save message to Firestore
     const message = await firebaseService.createMessage(messageData);
     console.log('New message created in Firestore:', message);
-    
+
     res.status(201).json({
       success: true,
       message: 'Message sent successfully',
@@ -142,7 +143,7 @@ router.put('/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const { error, value } = updateMessageSchema.validate(req.body);
-    
+
     if (error) {
       return res.status(400).json({
         success: false,
@@ -168,7 +169,7 @@ router.put('/:id', authenticate, async (req, res) => {
     }
 
     const message = await firebaseService.updateMessage(id, value);
-    
+
     res.json({
       success: true,
       message: 'Message updated successfully',
@@ -193,7 +194,7 @@ router.delete('/clear', authenticate, async (req, res) => {
         message: 'Only Sarpanch can clear all messages'
       });
     }
-    
+
     console.log('Sarpanch clearing all messages...');
     await firebaseService.clearAllMessages();
     res.json({
@@ -213,7 +214,7 @@ router.delete('/clear', authenticate, async (req, res) => {
 router.delete('/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // Check if message exists
     const existingMessage = await firebaseService.getMessageById(id);
     if (!existingMessage) {
@@ -232,7 +233,7 @@ router.delete('/:id', authenticate, async (req, res) => {
     }
 
     await firebaseService.deleteMessage(id);
-    
+
     res.json({
       success: true,
       message: 'Message deleted successfully'

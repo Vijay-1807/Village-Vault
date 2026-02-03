@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { auth, db } from '../config/firebase'
-import { 
-  signInWithPhoneNumber, 
-  RecaptchaVerifier, 
+import {
+  signInWithPhoneNumber,
+  RecaptchaVerifier,
   onAuthStateChanged,
   signOut as firebaseSignOut
 } from 'firebase/auth'
@@ -85,9 +85,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     )
   }
 
-  // Make test function available globally for debugging
-  ;(window as any).testOTPPopup = testOTPPopup
-  
+    // Make test function available globally for debugging
+    ; (window as any).testOTPPopup = testOTPPopup
+
   // Debug function to check current OTP state
   const debugOTPState = () => {
     console.log('=== OTP Debug State ===')
@@ -97,7 +97,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     console.log('Current user:', user)
     console.log('======================')
   }
-  ;(window as any).debugOTPState = debugOTPState
+    ; (window as any).debugOTPState = debugOTPState
 
   useEffect(() => {
     // Initialize reCAPTCHA verifier
@@ -122,26 +122,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Check for existing user in localStorage first
     const savedUser = localStorage.getItem('user')
     const isTestUserFlag = localStorage.getItem('isTestUser')
-    
+
     if (savedUser) {
       try {
         const userData = JSON.parse(savedUser)
         setUser(userData)
         setIsTestUser(isTestUserFlag === 'true')
         console.log('Restored user from localStorage:', userData, 'isTestUser:', isTestUserFlag === 'true')
-    } catch (error) {
+      } catch (error) {
         console.error('Error parsing saved user:', error)
         localStorage.removeItem('user')
         localStorage.removeItem('isTestUser')
       }
     }
-    
+
     // Stop loading - initialization complete
     setLoading(false)
 
     // Listen for authentication state changes (only for real Firebase users)
     let unsubscribe: (() => void) | null = null
-    
+
     // Only set up Firebase auth listener if we don't have a test user
     if (!savedUser || isTestUserFlag !== 'true') {
       unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -194,27 +194,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // For development with free tier, use test phone numbers with roles
       const testPhoneNumbers = {
         '7286973788': { role: 'SARPANCH', name: 'Village Sarpanch' },
-        '6305994096': { role: 'VILLAGER', name: 'Test Villager 1' },
-        '9849119427': { role: 'VILLAGER', name: 'Test Villager 2' }
+        '9849119427': { role: 'VILLAGER', name: 'Gayathri' },
+        '6305994096': { role: 'VILLAGER', name: 'Thilak Nikilesh' },
+        '9494064441': { role: 'VILLAGER', name: 'Veena' },
+        '7981738294': { role: 'VILLAGER', name: 'Rohini' }
       }
-      
+
       // Check if it's a test phone number (remove any spaces, dashes, or country codes)
       const cleanPhoneNumber = phoneNumber.replace(/\D/g, '') // Remove all non-digits
-      
+
       console.log('Login - Checking phone number:', cleanPhoneNumber, 'against test numbers:', Object.keys(testPhoneNumbers))
-      
+
       if (testPhoneNumbers[cleanPhoneNumber as keyof typeof testPhoneNumbers]) {
         // For test numbers, generate random OTP
         const randomOTPs = ['2384', '1234', '1807']
         const testOTP = randomOTPs[Math.floor(Math.random() * randomOTPs.length)]
-        ;(window as any).testOTP = testOTP
-        ;(window as any).testPhoneNumber = phoneNumber
-        
+          ; (window as any).testOTP = testOTP
+          ; (window as any).testPhoneNumber = phoneNumber
+
         console.log('Login - Test phone number detected, showing OTP:', testOTP)
-        
+
         // Store phone number for OTP verification
         localStorage.setItem('phoneNumber', phoneNumber)
-        
+
         // Show beautiful OTP notification with black and white theme
         toast.success(
           <div className="text-center">
@@ -234,7 +236,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
           }
         )
-        
+
         // Redirect to verify OTP page
         setTimeout(() => {
           window.location.href = '/verify-otp'
@@ -248,12 +250,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const appVerifier = recaptchaVerifier
       const phoneNumberWithCountryCode = `+91${phoneNumber}`
-      
+
       const confirmationResult = await signInWithPhoneNumber(auth, phoneNumberWithCountryCode, appVerifier)
-      
-      // Store confirmation result for OTP verification
-      ;(window as any).confirmationResult = confirmationResult
-      
+
+        // Store confirmation result for OTP verification
+        ; (window as any).confirmationResult = confirmationResult
+
       toast.success('OTP sent to your phone number', {
         style: {
           background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)',
@@ -271,7 +273,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           <div className="text-center">
             <div className="text-lg font-bold text-red-600 mb-2">📱 SMS Quota Exceeded</div>
             <div className="text-sm text-gray-600 mb-2">Use test phone numbers:</div>
-            <div className="text-sm font-mono text-blue-600">7286973788, 6305994096, 9849119427</div>
+            <div className="text-xs font-mono text-blue-600 break-all">7286973788, 9849119427, 6305994096, 9494064441, 7981738294</div>
           </div>,
           {
             duration: 8000,
@@ -296,27 +298,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Check for test OTP
       const testOTP = (window as any).testOTP
       const pendingUserData = (window as any).pendingUserData
-      
+
       console.log('VerifyOTP - Input OTP:', otp)
       console.log('VerifyOTP - Stored testOTP:', testOTP)
       console.log('VerifyOTP - Phone number:', phoneNumber)
       console.log('VerifyOTP - Pending user data:', pendingUserData)
-      
+
       // Check if it's a test phone number and OTP matches
       const testPhoneNumbers = {
         '7286973788': { role: 'SARPANCH', name: 'Village Sarpanch' },
-        '6305994096': { role: 'VILLAGER', name: 'Test Villager 1' },
-        '9849119427': { role: 'VILLAGER', name: 'Test Villager 2' }
+        '9849119427': { role: 'VILLAGER', name: 'Gayathri' },
+        '6305994096': { role: 'VILLAGER', name: 'Thilak Nikilesh' },
+        '9494064441': { role: 'VILLAGER', name: 'Veena' },
+        '7981738294': { role: 'VILLAGER', name: 'Rohini' }
       }
       const cleanPhoneNumber = phoneNumber.replace(/\D/g, '')
       const testUserInfo = testPhoneNumbers[cleanPhoneNumber as keyof typeof testPhoneNumbers]
       const isTestPhone = !!testUserInfo
       const randomOTPs = ['2384', '1234', '1807']
-      
+
       console.log('VerifyOTP - Is test phone:', isTestPhone)
       console.log('VerifyOTP - Clean phone number:', cleanPhoneNumber)
       console.log('VerifyOTP - Test user info:', testUserInfo)
-      
+
       if (isTestPhone && randomOTPs.includes(otp)) {
         // For test OTP, create a mock user with the correct role
         const mockUser: User = {
@@ -332,11 +336,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(mockUser)
         setToken('test-token')
         setIsTestUser(true)
-        
+
         // Store user data in localStorage for persistence
         localStorage.setItem('user', JSON.stringify(mockUser))
         localStorage.setItem('isTestUser', 'true')
-        
+
         // Show beautiful success notification with black and white theme
         toast.success(
           <div className="text-center">
@@ -355,7 +359,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
           }
         )
-        
+
         // Redirect to dashboard after successful verification
         setTimeout(() => {
           window.location.href = '/dashboard'
@@ -405,13 +409,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     } catch (error: any) {
       console.error('OTP verification error:', error)
-      
+
       // Check if it's a test phone number for better error message
       const testPhoneNumbers = ['7286973788', '6305994096', '9849119427']
       const cleanPhoneNumber = phoneNumber.replace(/\D/g, '')
       const isTestPhone = testPhoneNumbers.includes(cleanPhoneNumber)
       const randomOTPs = ['2384', '1234', '1807']
-      
+
       if (isTestPhone) {
         toast.error(
           <div className="text-center">
@@ -442,28 +446,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // For development with free tier, use test phone numbers with roles
       const testPhoneNumbers = {
         '7286973788': { role: 'SARPANCH', name: 'Village Sarpanch' },
-        '6305994096': { role: 'VILLAGER', name: 'Test Villager 1' },
-        '9849119427': { role: 'VILLAGER', name: 'Test Villager 2' }
+        '9849119427': { role: 'VILLAGER', name: 'Gayathri' },
+        '6305994096': { role: 'VILLAGER', name: 'Thilak Nikilesh' },
+        '9494064441': { role: 'VILLAGER', name: 'Veena' },
+        '7981738294': { role: 'VILLAGER', name: 'Rohini' }
       }
-      
+
       // Check if it's a test phone number (remove any spaces, dashes, or country codes)
       const cleanPhoneNumber = userData.phoneNumber.replace(/\D/g, '') // Remove all non-digits
-      
+
       console.log('Register - Checking phone number:', cleanPhoneNumber, 'against test numbers:', Object.keys(testPhoneNumbers))
-      
+
       if (testPhoneNumbers[cleanPhoneNumber as keyof typeof testPhoneNumbers]) {
         // For test numbers, generate random OTP
         const randomOTPs = ['2384', '1234', '1807']
         const testOTP = randomOTPs[Math.floor(Math.random() * randomOTPs.length)]
-        ;(window as any).testOTP = testOTP
-        ;(window as any).pendingUserData = userData
-        ;(window as any).testPhoneNumber = userData.phoneNumber
-        
+          ; (window as any).testOTP = testOTP
+          ; (window as any).pendingUserData = userData
+          ; (window as any).testPhoneNumber = userData.phoneNumber
+
         console.log('Register - Test phone number detected, showing OTP:', testOTP)
-        
+
         // Store phone number for OTP verification
         localStorage.setItem('phoneNumber', userData.phoneNumber)
-        
+
         // Show beautiful OTP notification with black and white theme
         toast.success(
           <div className="text-center">
@@ -483,7 +489,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
           }
         )
-        
+
         // Redirect to verify OTP page
         setTimeout(() => {
           window.location.href = '/verify-otp'
@@ -497,13 +503,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const appVerifier = recaptchaVerifier
       const phoneNumberWithCountryCode = `+91${userData.phoneNumber}`
-      
+
       const confirmationResult = await signInWithPhoneNumber(auth, phoneNumberWithCountryCode, appVerifier)
-      
-      // Store confirmation result and user data for OTP verification
-      ;(window as any).confirmationResult = confirmationResult
-      ;(window as any).pendingUserData = userData
-      
+
+        // Store confirmation result and user data for OTP verification
+        ; (window as any).confirmationResult = confirmationResult
+        ; (window as any).pendingUserData = userData
+
       toast.success('OTP sent to your phone number', {
         style: {
           background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)',
@@ -551,10 +557,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.removeItem('token')
       localStorage.removeItem('isTestUser')
       localStorage.removeItem('phoneNumber')
-      // Clear test data
-      ;(window as any).testOTP = null
-      ;(window as any).pendingUserData = null
-      ;(window as any).testPhoneNumber = null
+        // Clear test data
+        ; (window as any).testOTP = null
+        ; (window as any).pendingUserData = null
+        ; (window as any).testPhoneNumber = null
       toast.success('Logged out successfully', {
         style: {
           background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)',

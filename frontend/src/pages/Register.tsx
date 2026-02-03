@@ -54,7 +54,7 @@ const Register = () => {
   }
 
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center py-4 px-4 sm:py-8 md:py-12 sm:px-6 lg:px-8 relative overflow-y-auto"
       style={{
         backgroundImage: 'url(https://images.unsplash.com/photo-1564426699369-f14249ac2c32?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dmlsbGFnZSUyMG5hdHVyZXxlbnwwfHwwfHx8MA%3D%3D&fm=jpg&q=60&w=3000)',
@@ -65,20 +65,20 @@ const Register = () => {
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/50"></div>
-      
+
       {/* Language Selector - Top Right */}
       <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20">
         <LanguageSelector />
       </div>
-      
+
       <div className="max-w-md w-full space-y-3 sm:space-y-5 md:space-y-8 relative z-10 mx-auto px-3 sm:px-4 overflow-y-auto max-h-screen pb-6">
         <div className="text-center">
           <div className="flex items-center justify-center mb-3 sm:mb-4 md:mb-5">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white flex items-center justify-center" style={{ fontFamily: 'serif', textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
               <div className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 flex-shrink-0 drop-shadow-lg -mr-1 sm:-mr-2">
-                <img 
-                  src="/DeWatermark.ai_1760249488029-removebg-preview.png" 
-                  alt="V Logo" 
+                <img
+                  src="/DeWatermark.ai_1760249488029-removebg-preview.png"
+                  alt="V Logo"
                   className="h-full w-full object-contain"
                   loading="eager"
                 />
@@ -93,7 +93,7 @@ const Register = () => {
             {t('auth.register')}
           </h2>
         </div>
-        
+
         <form className="mt-4 sm:mt-6 md:mt-8 space-y-3 sm:space-y-4 md:space-y-5" onSubmit={handleSubmit}>
           <div className="space-y-3 sm:space-y-4">
             <div>

@@ -30,9 +30,9 @@ api.interceptors.request.use(
     const token = localStorage.getItem('token')
     const isTestUser = localStorage.getItem('isTestUser')
     const user = localStorage.getItem('user')
-    
+
     console.log('API Request - isTestUser:', isTestUser, 'user:', user)
-    
+
     if (isTestUser === 'true' && user) {
       // For test users, use test tokens based on role
       const userData = JSON.parse(user)
@@ -40,8 +40,12 @@ api.interceptors.request.use(
         config.headers.Authorization = `Bearer test-sarpanch-token`
         console.log('API Request - Using sarpanch test token')
       } else {
-        config.headers.Authorization = `Bearer test-villager-token`
-        console.log('API Request - Using villager test token')
+        // Send specific villager token including phone number
+        const phoneNumber = userData.phoneNumber || '';
+        // Extract plain digits if needed, but assuming phoneNumber might be dirty, clean it
+        const cleanPhone = phoneNumber.replace(/\D/g, '').slice(-10); // Last 10 digits
+        config.headers.Authorization = `Bearer test-villager-token-${cleanPhone}`
+        console.log(`API Request - Using villager test token for ${cleanPhone}`)
       }
     } else if (token) {
       config.headers.Authorization = `Bearer ${token}`
@@ -49,7 +53,7 @@ api.interceptors.request.use(
     } else {
       console.log('API Request - No token found')
     }
-    
+
     console.log('API Request - Final headers:', config.headers)
     return config
   },

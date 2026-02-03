@@ -40,7 +40,7 @@ const Messages = () => {
     fetchMessages()
   }, [])
 
-      // Socket.IO listeners for real-time updates
+  // Socket.IO listeners for real-time updates
   useEffect(() => {
     if (socket && isConnected) {
       // Listen for new messages
@@ -57,7 +57,7 @@ const Messages = () => {
       // Listen for message updates
       socket.on('messageUpdated', (updatedMessage: Message) => {
         logger.log('Message updated:', updatedMessage)
-        setMessages(prev => 
+        setMessages(prev =>
           prev.map(msg => msg.id === updatedMessage.id ? updatedMessage : msg)
         )
       })
@@ -81,9 +81,9 @@ const Messages = () => {
       logger.log('Fetching messages...')
       const response = await api.get('/messages')
       logger.log('Messages response received')
-      
+
       const messagesData = response.data.data.messages || []
-      
+
       // Ensure each message has the required fields with fallbacks
       const normalizedMessages = messagesData.map((message: any) => ({
         ...message,
@@ -94,7 +94,7 @@ const Messages = () => {
         receiverName: message.receiverName || '',
         receiverRole: message.receiverRole || ''
       }))
-      
+
       setMessages(normalizedMessages)
     } catch (error) {
       logger.error('Failed to fetch messages:', error)
@@ -111,7 +111,7 @@ const Messages = () => {
     // Rate limiting: prevent sending messages too quickly
     const now = Date.now()
     const timeSinceLastSend = now - lastSendTime
-    
+
     if (timeSinceLastSend < RATE_LIMIT_MS) {
       const waitTime = RATE_LIMIT_MS - timeSinceLastSend
       toast.error(`Please wait ${Math.ceil(waitTime / 1000)} second(s) before sending another message`)
@@ -153,25 +153,25 @@ const Messages = () => {
         type: 'TEXT',
         villageId: user?.villageId || 'test-village-id'
       })
-      
+
       // Replace optimistic message with real message from server
       const realMessage = response.data.data.message
-      setMessages(prev => 
+      setMessages(prev =>
         prev.map(msg => msg.id === tempId ? realMessage : msg)
       )
-      
+
       // Emit message via Socket.IO for real-time updates
       if (socket && isConnected) {
         socket.emit('sendMessage', realMessage)
       }
-      
+
       toast.success('Message sent successfully')
     } catch (error: any) {
       logger.error('Text message error:', error)
-      
+
       // Remove optimistic message on error
       setMessages(prev => prev.filter(msg => msg.id !== tempId))
-      
+
       toast.error(error.response?.data?.message || 'Failed to send message. Please try again.')
     } finally {
       setSending(false)
@@ -186,7 +186,7 @@ const Messages = () => {
     // Rate limiting check
     const now = Date.now()
     const timeSinceLastSend = now - lastSendTime
-    
+
     if (timeSinceLastSend < RATE_LIMIT_MS) {
       const waitTime = RATE_LIMIT_MS - timeSinceLastSend
       toast.error(`Please wait ${Math.ceil(waitTime / 1000)} second(s) before sending another message`)
@@ -240,28 +240,28 @@ const Messages = () => {
           'Content-Type': 'multipart/form-data'
         }
       })
-      
+
       // Replace optimistic message with real message from server
       const realMessage = response.data.data.message
-      
+
       // Clean up temporary object URL
       if (optimisticMessage.imageUrl?.startsWith('blob:')) {
         URL.revokeObjectURL(optimisticMessage.imageUrl)
       }
-      
-      setMessages(prev => 
+
+      setMessages(prev =>
         prev.map(msg => msg.id === tempId ? realMessage : msg)
       )
-      
+
       // Emit message via Socket.IO for real-time updates
       if (socket && isConnected) {
         socket.emit('sendMessage', realMessage)
       }
-      
+
       toast.success('Image shared successfully!')
     } catch (error: any) {
       logger.error('Image upload error:', error)
-      
+
       // Remove optimistic message on error
       setMessages(prev => {
         const updated = prev.filter(msg => msg.id !== tempId)
@@ -271,7 +271,7 @@ const Messages = () => {
         }
         return updated
       })
-      
+
       toast.error(error.response?.data?.message || 'Failed to share image. Please try again.')
     } finally {
       setSending(false)
@@ -284,7 +284,7 @@ const Messages = () => {
       'Are you sure you want to clear all messages? This action cannot be undone.',
       'Clear All Messages'
     )
-    
+
     if (result.isConfirmed) {
       try {
         await api.delete('/messages/clear')
@@ -301,12 +301,12 @@ const Messages = () => {
     try {
       await api.delete(`/messages/${messageId}`)
       setMessages(prev => prev.filter(msg => msg.id !== messageId))
-      
+
       // Emit deletion via Socket.IO
       if (socket && isConnected) {
         socket.emit('deleteMessage', messageId)
       }
-      
+
       toast.success('Message deleted successfully')
     } catch (error: any) {
       logger.error('Failed to delete message:', error)
@@ -317,7 +317,7 @@ const Messages = () => {
   const formatTime = (timestamp: string | Date | any) => {
     try {
       let date: Date
-      
+
       // Handle different timestamp formats
       if (typeof timestamp === 'object' && timestamp !== null) {
         // Handle Firestore timestamp object
@@ -360,18 +360,18 @@ const Messages = () => {
         logger.warn('Unknown timestamp type:', typeof timestamp)
         return 'Just now'
       }
-      
+
       // Check if date is valid
       if (!date || isNaN(date.getTime())) {
         logger.warn('Invalid date created from timestamp:', timestamp)
         return 'Just now'
       }
-      
+
       const now = new Date()
       const diffInSeconds = (now.getTime() - date.getTime()) / 1000
       const diffInMinutes = diffInSeconds / 60
       const diffInHours = diffInMinutes / 60
-      
+
       if (diffInSeconds < 60) {
         return 'Just now'
       } else if (diffInMinutes < 60) {

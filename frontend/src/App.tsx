@@ -11,7 +11,8 @@ import Messages from './pages/Messages'
 import SOS from './pages/SOS'
 import Profile from './pages/Profile'
 import VillageInfo from './pages/VillageInfo'
-import AIChat from './pages/AIChat'
+import HealthCheck from './pages/HealthCheck'
+
 import EnhancedWeather from './pages/EnhancedWeather'
 import LoadingSpinner from './components/LoadingSpinner'
 import SecureNavigation from './components/SecureNavigation'
@@ -20,30 +21,30 @@ import ErrorBoundary from './components/ErrorBoundary'
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
   const { user, loading } = useAuth()
-  
+
   if (loading) {
     return <LoadingSpinner />
   }
-  
+
   if (!user) {
     return <Navigate to="/login" replace />
   }
-  
+
   return children
 }
 
 // Public Route Component (redirect if authenticated)
 const PublicRoute = ({ children }: { children: React.ReactElement }) => {
   const { user, loading } = useAuth()
-  
+
   if (loading) {
     return <LoadingSpinner />
   }
-  
+
   if (user) {
     return <Navigate to="/dashboard" replace />
   }
-  
+
   return children
 }
 
@@ -61,40 +62,40 @@ function App() {
         <SecureNavigation />
         <Routes>
           {/* Public routes - only accessible when not authenticated */}
-          <Route 
-            path="/login" 
+          <Route
+            path="/login"
             element={
               <PublicRoute>
                 <ErrorBoundary>
                   <Login />
                 </ErrorBoundary>
               </PublicRoute>
-            } 
+            }
           />
-          <Route 
-            path="/register" 
+          <Route
+            path="/register"
             element={
               <PublicRoute>
                 <ErrorBoundary>
                   <Register />
                 </ErrorBoundary>
               </PublicRoute>
-            } 
+            }
           />
-          <Route 
-            path="/verify-otp" 
+          <Route
+            path="/verify-otp"
             element={
               <PublicRoute>
                 <ErrorBoundary>
                   <VerifyOTP />
                 </ErrorBoundary>
               </PublicRoute>
-            } 
+            }
           />
-          
+
           {/* Protected routes - require authentication */}
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
               <ProtectedRoute>
                 <Layout />
@@ -108,18 +109,19 @@ function App() {
             <Route path="sos" element={<ErrorBoundary><SOS /></ErrorBoundary>} />
             <Route path="profile" element={<ErrorBoundary><Profile /></ErrorBoundary>} />
             <Route path="village" element={<ErrorBoundary><VillageInfo /></ErrorBoundary>} />
-            <Route path="ai-chat" element={<ErrorBoundary><AIChat /></ErrorBoundary>} />
+            <Route path="health-check" element={<ErrorBoundary><HealthCheck /></ErrorBoundary>} />
+
             <Route path="enhanced-weather" element={<ErrorBoundary><EnhancedWeather /></ErrorBoundary>} />
           </Route>
-          
+
           {/* Catch all route - redirect based on auth status */}
-          <Route 
-            path="*" 
+          <Route
+            path="*"
             element={
               <ProtectedRoute>
                 <Navigate to="/dashboard" replace />
               </ProtectedRoute>
-            } 
+            }
           />
         </Routes>
       </div>

@@ -79,7 +79,7 @@ const Profile = () => {
               {user.name.charAt(0).toUpperCase()}
             </span>
           </div>
-          
+
           <div className="flex-1 w-full min-w-0">
             <div className="space-y-3 sm:space-y-4">
               <div>

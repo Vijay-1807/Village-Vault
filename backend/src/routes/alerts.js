@@ -25,7 +25,8 @@ const createAlertSchema = Joi.object({
 const updateAlertSchema = Joi.object({
   title: Joi.string().min(1).max(200),
   message: Joi.string().min(1).max(1000),
-  priority: Joi.string().valid('LOW', 'MEDIUM', 'HIGH', 'EMERGENCY')
+  priority: Joi.string().valid('LOW', 'MEDIUM', 'HIGH', 'EMERGENCY'),
+  status: Joi.string().valid('ACTIVE', 'COMPLETED', 'ARCHIVED')
 });
 
 // Get all alerts (public - everyone can view)
@@ -33,7 +34,7 @@ router.get('/', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10;
     const alerts = await firebaseService.getAlerts(limit);
-    
+
     res.json({
       success: true,
       data: { alerts }
@@ -53,7 +54,7 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const alert = await firebaseService.getAlertById(id);
-    
+
     res.json({
       success: true,
       data: { alert }
@@ -72,7 +73,7 @@ router.post('/', authenticate, authorize(['SARPANCH']), async (req, res) => {
   try {
     console.log('Alert creation request body:', req.body);
     console.log('User making request:', req.user);
-    
+
     const { error, value } = createAlertSchema.validate(req.body);
     if (error) {
       console.log('Validation error:', error.details);
@@ -91,7 +92,25 @@ router.post('/', authenticate, authorize(['SARPANCH']), async (req, res) => {
     };
 
     const alert = await firebaseService.createAlert(alertData);
-    
+
+    // Simulate delivery channels
+    if (alertData.channels.includes('IN_APP')) {
+      // Emit socket event for real-time update
+      const io = req.app.get('io');
+      if (io) {
+        io.emit('newAlert', alert);
+        console.log('socket event emitted');
+      }
+    }
+
+    if (alertData.channels.includes('SMS')) {
+      console.log(`[SIMULATION] Sending SMS to all villagers in ${alertData.villageId}: "${alertData.title}"`);
+    }
+
+    if (alertData.channels.includes('MISSED_CALL')) {
+      console.log(`[SIMULATION] Initiating Missed Calls to all villagers in ${alertData.villageId}`);
+    }
+
     res.status(201).json({
       success: true,
       message: 'Alert created successfully',
@@ -110,9 +129,12 @@ router.post('/', authenticate, authorize(['SARPANCH']), async (req, res) => {
 router.put('/:id', authenticate, authorize(['SARPANCH']), async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(`[Alerts] Updating alert ${id} with data:`, req.body);
+
     const { error, value } = updateAlertSchema.validate(req.body);
-    
+
     if (error) {
+      console.warn('[Alerts] Validation error:', error.details);
       return res.status(400).json({
         success: false,
         message: error.details[0].message
@@ -129,14 +151,15 @@ router.put('/:id', authenticate, authorize(['SARPANCH']), async (req, res) => {
     }
 
     const alert = await firebaseService.updateAlert(id, value);
-    
+    console.log('[Alerts] Update successful:', alert);
+
     res.json({
       success: true,
       message: 'Alert updated successfully',
       data: { alert }
     });
   } catch (error) {
-    console.error('Update alert error:', error);
+    console.error('[Alerts] Update error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to update alert'
@@ -148,7 +171,7 @@ router.put('/:id', authenticate, authorize(['SARPANCH']), async (req, res) => {
 router.delete('/:id', authenticate, authorize(['SARPANCH']), async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // Check if alert exists
     const existingAlert = await firebaseService.getAlertById(id);
     if (!existingAlert) {
@@ -159,7 +182,7 @@ router.delete('/:id', authenticate, authorize(['SARPANCH']), async (req, res) =>
     }
 
     await firebaseService.deleteAlert(id);
-    
+
     res.json({
       success: true,
       message: 'Alert deleted successfully'

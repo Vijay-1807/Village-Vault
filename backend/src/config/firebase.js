@@ -22,13 +22,13 @@ if (!admin.apps.length) {
         auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
         client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${process.env.FIREBASE_CLIENT_EMAIL}`
       };
-      
+
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         projectId: 'villagevault-b9ac4',
         storageBucket: "villagevault-b9ac4.appspot.com"
       });
-      
+
       db = admin.firestore();
       auth = admin.auth();
       storage = admin.storage();
@@ -172,7 +172,7 @@ if (!admin.apps.length) {
           })
         })
       };
-      
+
       // Mock admin object with firestore FieldValue
       admin = {
         firestore: {
@@ -181,7 +181,7 @@ if (!admin.apps.length) {
           }
         }
       };
-      
+
       auth = {
         createUser: () => Promise.resolve({ uid: 'mock-uid' }),
         getUser: () => Promise.resolve({ uid: 'mock-uid' })
@@ -326,7 +326,7 @@ if (!admin.apps.length) {
         })
       })
     };
-    
+
     // Mock admin object with firestore FieldValue
     admin = {
       firestore: {
@@ -335,7 +335,7 @@ if (!admin.apps.length) {
         }
       }
     };
-    
+
     auth = {
       createUser: () => Promise.resolve({ uid: 'mock-uid' }),
       getUser: () => Promise.resolve({ uid: 'mock-uid' })

@@ -99,7 +99,7 @@ const VerifyOTP = () => {
   }
 
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center py-4 px-4 sm:py-8 md:py-12 sm:px-6 lg:px-8 relative overflow-y-auto"
       style={{
         backgroundImage: 'url(https://images.unsplash.com/photo-1564426699369-f14249ac2c32?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dmlsbGFnZSUyMG5hdHVyZXxlbnwwfHwwfHx8MA%3D%3D&fm=jpg&q=60&w=3000)',
@@ -115,9 +115,9 @@ const VerifyOTP = () => {
           <div className="flex items-center justify-center mb-3 sm:mb-4 md:mb-5">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white flex items-center justify-center" style={{ fontFamily: 'serif', textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
               <div className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 flex-shrink-0 drop-shadow-lg -mr-1 sm:-mr-2">
-                <img 
-                  src="/DeWatermark.ai_1760249488029-removebg-preview.png" 
-                  alt="V Logo" 
+                <img
+                  src="/DeWatermark.ai_1760249488029-removebg-preview.png"
+                  alt="V Logo"
                   className="h-full w-full object-contain"
                   loading="eager"
                 />
@@ -132,7 +132,7 @@ const VerifyOTP = () => {
             Enter the 4-digit OTP sent to <span className="font-bold text-orange-300">{phoneNumber || 'your phone'}</span>
           </p>
         </div>
-        
+
         <form className="mt-5 sm:mt-6 md:mt-8 space-y-5 sm:space-y-6 md:space-y-7" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="otp" className="sr-only">
@@ -196,7 +196,7 @@ const VerifyOTP = () => {
                 )}
               </button>
             </p>
-            
+
             {/* Debug button for testing OTP popup - Only show in development */}
             {process.env.NODE_ENV === 'development' && (
               <div className="mt-3">

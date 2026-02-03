@@ -59,8 +59,8 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     service: 'VillageVault API'
   });
@@ -85,12 +85,12 @@ setIOInstance(io);
 if (process.env.NODE_ENV === 'production') {
   const frontendPath = path.join(__dirname, '../../frontend/dist');
   const fs = require('fs');
-  
+
   // Check if frontend build exists
   if (fs.existsSync(frontendPath)) {
     // Serve static files from frontend dist
     app.use(express.static(frontendPath));
-    
+
     // Handle React Router - send all non-API requests to index.html
     app.get('*', (req, res, next) => {
       // Don't handle API routes
@@ -100,7 +100,7 @@ if (process.env.NODE_ENV === 'production') {
       // Serve index.html for all other routes
       res.sendFile(path.join(frontendPath, 'index.html'));
     });
-    
+
     console.log('✅ Frontend static files served from:', frontendPath);
   } else {
     console.warn('⚠️  Frontend build not found at:', frontendPath);
@@ -118,5 +118,23 @@ server.listen(PORT, () => {
   console.log(`🚀 VillageVault API server running on port ${PORT}`);
   console.log(`📱 Health check: http://localhost:${PORT}/api/health`);
 });
+
+// Graceful shutdown
+const gracefulShutdown = () => {
+  console.log('Received kill signal, shutting down gracefully');
+  server.close(() => {
+    console.log('Closed out remaining connections');
+    process.exit(0);
+  });
+
+  // Force close after 10s
+  setTimeout(() => {
+    console.error('Could not close connections in time, forcefully shutting down');
+    process.exit(1);
+  }, 10000);
+};
+
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
 
 module.exports = { io };

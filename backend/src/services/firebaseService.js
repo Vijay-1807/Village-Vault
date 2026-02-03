@@ -23,11 +23,11 @@ class FirebaseService {
       const usersSnapshot = await db.collection('users')
         .where('phoneNumber', '==', phoneNumber)
         .get();
-      
+
       if (usersSnapshot.empty) {
         return null;
       }
-      
+
       const userDoc = usersSnapshot.docs[0];
       return { id: userDoc.id, ...userDoc.data() };
     } catch (error) {
@@ -79,11 +79,11 @@ class FirebaseService {
         .where('pinCode', '==', pinCode)
         .where('name', '==', name)
         .get();
-      
+
       if (villagesSnapshot.empty) {
         return null;
       }
-      
+
       const villageDoc = villagesSnapshot.docs[0];
       return { id: villageDoc.id, ...villageDoc.data() };
     } catch (error) {
@@ -109,7 +109,7 @@ class FirebaseService {
         .where('villageId', '==', villageId)
         .where('role', '==', role)
         .get();
-      
+
       return usersSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -139,7 +139,7 @@ class FirebaseService {
         .orderBy('createdAt', 'desc')
         .limit(limit)
         .get();
-      
+
       return alertsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -153,7 +153,7 @@ class FirebaseService {
     try {
       const alertDoc = await db.collection('alerts').doc(alertId).get();
       if (!alertDoc.exists) {
-        throw new Error('Alert not found');
+        return null;
       }
       return { id: alertDoc.id, ...alertDoc.data() };
     } catch (error) {
@@ -202,7 +202,7 @@ class FirebaseService {
         .orderBy('createdAt', 'desc')
         .limit(limit)
         .get();
-      
+
       return sosSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -216,7 +216,7 @@ class FirebaseService {
     try {
       const sosDoc = await db.collection('sosReports').doc(sosId).get();
       if (!sosDoc.exists) {
-        throw new Error('SOS report not found');
+        return null;
       }
       return { id: sosDoc.id, ...sosDoc.data() };
     } catch (error) {
@@ -254,7 +254,7 @@ class FirebaseService {
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         updatedAt: admin.firestore.FieldValue.serverTimestamp()
       };
-      
+
       // Try to save to real Firestore first
       try {
         const messageRef = await db.collection('messages').add({
@@ -264,7 +264,7 @@ class FirebaseService {
         });
         const savedMessage = { id: messageRef.id, ...messageData, createdAt: admin.firestore.FieldValue.serverTimestamp(), updatedAt: admin.firestore.FieldValue.serverTimestamp() };
         console.log('Message created and saved to Firestore:', savedMessage);
-        
+
         // Also add to temporary storage for fallback
         tempMessages.push(savedMessage); // Add to end to maintain chronological order
         return savedMessage;
@@ -283,10 +283,10 @@ class FirebaseService {
   async uploadImage(file, fileName) {
     try {
       console.log('Uploading image:', fileName, 'Size:', file.size, 'Type:', file.mimetype);
-      
+
       const bucket = storage.bucket();
       const fileUpload = bucket.file(`messages/images/${fileName}`);
-      
+
       const stream = fileUpload.createWriteStream({
         metadata: {
           contentType: file.mimetype,
@@ -304,7 +304,7 @@ class FirebaseService {
             console.log('Image upload stream finished, making public...');
             // Make the file publicly accessible
             await fileUpload.makePublic();
-            
+
             // Get the public URL
             const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
             console.log('Image uploaded successfully:', publicUrl);
@@ -327,10 +327,10 @@ class FirebaseService {
   async uploadAudio(file, fileName) {
     try {
       console.log('Uploading audio:', fileName, 'Size:', file.size, 'Type:', file.mimetype);
-      
+
       const bucket = storage.bucket();
       const fileUpload = bucket.file(`messages/audio/${fileName}`);
-      
+
       const stream = fileUpload.createWriteStream({
         metadata: {
           contentType: file.mimetype,
@@ -348,7 +348,7 @@ class FirebaseService {
             console.log('Audio upload stream finished, making public...');
             // Make the file publicly accessible
             await fileUpload.makePublic();
-            
+
             // Get the public URL
             const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
             console.log('Audio uploaded successfully:', publicUrl);
@@ -371,16 +371,16 @@ class FirebaseService {
   async getMessages(limit = 50) {
     try {
       console.log('FirebaseService - Getting messages with limit:', limit);
-      
+
       // Try to get messages from real Firestore first
       try {
         const messagesSnapshot = await db.collection('messages')
           .orderBy('createdAt', 'asc') // Oldest first
           .limit(limit)
           .get();
-        
+
         console.log('FirebaseService - Real Firestore messages count:', messagesSnapshot.size);
-        
+
         if (messagesSnapshot.size > 0) {
           const messages = messagesSnapshot.docs.map(doc => ({
             id: doc.id,
@@ -392,7 +392,7 @@ class FirebaseService {
       } catch (firestoreError) {
         console.log('FirebaseService - Firestore error, falling back to temp storage:', firestoreError.message);
       }
-      
+
       // Fallback to temporary storage if Firestore fails
       console.log('FirebaseService - Temp messages count:', tempMessages.length);
       const messages = tempMessages.slice(0, limit);
@@ -422,17 +422,17 @@ class FirebaseService {
       try {
         const messagesSnapshot = await db.collection('messages').get();
         const batch = db.batch();
-        
+
         messagesSnapshot.docs.forEach((doc) => {
           batch.delete(doc.ref);
         });
-        
+
         await batch.commit();
         console.log('All messages cleared from Firestore');
       } catch (firestoreError) {
         console.log('Firestore clear failed:', firestoreError.message);
       }
-      
+
       // Also clear temporary storage
       tempMessages = [];
       console.log('All messages cleared from temporary storage');

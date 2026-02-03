@@ -22,6 +22,24 @@ router.get('/village', authenticate, async (req, res) => {
       whereClause.role = role;
     }
 
+    // Check if this is a test user
+    if (req.user.id === 'test-user-id') {
+      const mockVillagers = [
+        { id: 'v1', name: 'Gayathri', phoneNumber: '+91 98491 19427', role: 'VILLAGER', createdAt: new Date() },
+        { id: 'v2', name: 'Thilak Nikilesh', phoneNumber: '+91 63059 94096', role: 'VILLAGER', createdAt: new Date() },
+        { id: 'v3', name: 'Veena', phoneNumber: '+91 94940 64441', role: 'VILLAGER', createdAt: new Date() },
+        { id: 'v4', name: 'Rohini', phoneNumber: '+91 79817 38294', role: 'VILLAGER', createdAt: new Date() }
+      ];
+
+      // Filter by role if requested
+      const filteredUsers = role ? mockVillagers.filter(u => u.role === role) : mockVillagers;
+
+      return res.json({
+        success: true,
+        data: { users: filteredUsers }
+      });
+    }
+
     const users = await prisma.user.findMany({
       where: whereClause,
       select: {
@@ -124,14 +142,14 @@ router.put('/profile', authenticate, async (req, res) => {
 router.get('/village/stats', authenticate, async (req, res) => {
   try {
     console.log('Dashboard stats request - User:', req.user);
-    
+
     // Check if this is a test user (not in database)
     const isTestUser = req.user.id === 'test-user-id';
-    
+
     if (isTestUser) {
       // For test users, get data from Firebase only (no Prisma)
       console.log('Test user detected - using Firebase data only');
-      
+
       const [alerts, sosReports, messages] = await Promise.allSettled([
         firebaseService.getAlerts(1000).catch(() => []),
         firebaseService.getSOSReports(1000).catch(() => []),
@@ -144,17 +162,17 @@ router.get('/village/stats', authenticate, async (req, res) => {
       const messagesData = messages.status === 'fulfilled' ? (messages.value || []) : [];
 
       // Count pending SOS reports
-      const pendingSOSReports = Array.isArray(sosReportsData) 
-        ? sosReportsData.filter(report => 
-            report.status?.toUpperCase() === 'PENDING' || 
-            report.status === 'pending'
-          ).length 
+      const pendingSOSReports = Array.isArray(sosReportsData)
+        ? sosReportsData.filter(report =>
+          report.status?.toUpperCase() === 'PENDING' ||
+          report.status === 'pending'
+        ).length
         : 0;
 
       // For test user, estimate users based on messages/alerts
       const stats = {
-        totalUsers: 2, // Test environment default
-        totalVillagers: 1, // Test environment default
+        totalUsers: 5, // 1 Sarpanch + 4 Villagers
+        totalVillagers: 4, // 4 Mock Villagers
         totalAlerts: Array.isArray(alertsData) ? alertsData.length : 0,
         pendingSOSReports: pendingSOSReports,
         recentMessages: Array.isArray(messagesData) ? messagesData.length : 0
@@ -170,7 +188,7 @@ router.get('/village/stats', authenticate, async (req, res) => {
 
     // For real users, get data from both Prisma and Firebase
     console.log('Real user detected - using Prisma + Firebase data');
-    
+
     const [totalUsersResult, totalVillagersResult, alertsResult, sosReportsResult, messagesResult] = await Promise.allSettled([
       // Count total users in village (including current user)
       prisma.user.count({
@@ -220,11 +238,11 @@ router.get('/village/stats', authenticate, async (req, res) => {
     const messages = messagesResult.status === 'fulfilled' ? (messagesResult.value || []) : [];
 
     // Count pending SOS reports
-    const pendingSOSReports = Array.isArray(sosReports) 
-      ? sosReports.filter(report => 
-          report.status?.toUpperCase() === 'PENDING' || 
-          report.status === 'pending'
-        ).length 
+    const pendingSOSReports = Array.isArray(sosReports)
+      ? sosReports.filter(report =>
+        report.status?.toUpperCase() === 'PENDING' ||
+        report.status === 'pending'
+      ).length
       : 0;
 
     // Get actual counts
@@ -245,7 +263,7 @@ router.get('/village/stats', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Get village stats error:', error);
     console.error('Error stack:', error.stack);
-    
+
     // Return safe defaults on error instead of crashing
     const stats = {
       totalUsers: 0,
