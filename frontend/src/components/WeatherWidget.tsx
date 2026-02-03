@@ -8,7 +8,7 @@ const WeatherWidget = () => {
   const [error, setError] = useState<string | null>(null)
   const [locationInput, setLocationInput] = useState('') // Start empty
   const [inputType, setInputType] = useState<'pincode' | 'coordinates' | 'city'>('city')
-  const [currentLocation, setCurrentLocation] = useState<{lat: number, lon: number, city: string} | null>(null)
+  // const [currentLocation, setCurrentLocation] = useState<{lat: number, lon: number, city: string} | null>(null)
 
   useEffect(() => {
     getCurrentLocation()
@@ -20,7 +20,7 @@ const WeatherWidget = () => {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords
-            setCurrentLocation({ lat: latitude, lon: longitude, city: 'Current Location' })
+            // setCurrentLocation({ lat: latitude, lon: longitude, city: 'Current Location' })
             await fetchWeatherByCoordinates(latitude, longitude)
           },
           (error) => {
@@ -43,20 +43,20 @@ const WeatherWidget = () => {
     try {
       setLoading(true)
       setError(null)
-      
+
       // Fetch real weather data
       const weatherData = await weatherService.getWeatherData(lat, lon)
-      
+
       // Fetch air quality data
       const airQuality = await weatherService.getAirQualityData(lat, lon)
-      
+
       // Update weather data with location and air quality
       const updatedWeather: WeatherData = {
         ...weatherData,
         city: cityName || weatherData.city,
         airQuality
       }
-      
+
       setWeather(updatedWeather)
     } catch (err) {
       console.error('Weather fetch error:', err)
@@ -70,10 +70,10 @@ const WeatherWidget = () => {
     try {
       setLoading(true)
       setError(null)
-      
+
       const location = customLocation || locationInput
       let coordinates: { lat: number, lon: number, city: string, state: string }
-      
+
       if (inputType === 'pincode') {
         // Get coordinates from PIN code
         const locationData = await weatherService.getCoordinatesFromPincode(location)
@@ -105,7 +105,7 @@ const WeatherWidget = () => {
           state: locationData.state
         }
       }
-      
+
       await fetchWeatherByCoordinates(coordinates.lat, coordinates.lon, coordinates.city)
     } catch (err) {
       console.error('Weather fetch error:', err)
@@ -145,8 +145,8 @@ const WeatherWidget = () => {
       <div className="p-6 text-center">
         <Cloud className="h-12 w-12 text-white/60 mx-auto mb-3" />
         <p className="text-white/80">{error}</p>
-        <button 
-          onClick={fetchWeather}
+        <button
+          onClick={() => fetchWeather()}
           className="mt-3 px-4 py-2 bg-blue-500/80 backdrop-blur-sm border border-white/20 text-white rounded-lg hover:bg-blue-600/80 transition-colors"
         >
           Retry
@@ -177,41 +177,38 @@ const WeatherWidget = () => {
           <MapPin className="h-4 w-4 text-white/80" />
           <span className="text-sm font-medium text-white">Location</span>
         </div>
-        
+
         {/* Input Type Toggle */}
         <div className="flex space-x-1 mb-2">
           <button
             onClick={() => setInputType('city')}
-            className={`px-3 py-1 text-xs rounded-full transition-colors ${
-              inputType === 'city' 
-                ? 'bg-blue-500/80 text-white backdrop-blur-sm border border-white/20' 
-                : 'bg-white/10 text-white/70 hover:bg-white/20 backdrop-blur-sm border border-white/10'
-            }`}
+            className={`px-3 py-1 text-xs rounded-full transition-colors ${inputType === 'city'
+              ? 'bg-blue-500/80 text-white backdrop-blur-sm border border-white/20'
+              : 'bg-white/10 text-white/70 hover:bg-white/20 backdrop-blur-sm border border-white/10'
+              }`}
           >
             City
           </button>
           <button
             onClick={() => setInputType('pincode')}
-            className={`px-3 py-1 text-xs rounded-full transition-colors ${
-              inputType === 'pincode' 
-                ? 'bg-blue-500/80 text-white backdrop-blur-sm border border-white/20' 
-                : 'bg-white/10 text-white/70 hover:bg-white/20 backdrop-blur-sm border border-white/10'
-            }`}
+            className={`px-3 py-1 text-xs rounded-full transition-colors ${inputType === 'pincode'
+              ? 'bg-blue-500/80 text-white backdrop-blur-sm border border-white/20'
+              : 'bg-white/10 text-white/70 hover:bg-white/20 backdrop-blur-sm border border-white/10'
+              }`}
           >
             PIN Code
           </button>
           <button
             onClick={() => setInputType('coordinates')}
-            className={`px-3 py-1 text-xs rounded-full transition-colors ${
-              inputType === 'coordinates' 
-                ? 'bg-blue-500/80 text-white backdrop-blur-sm border border-white/20' 
-                : 'bg-white/10 text-white/70 hover:bg-white/20 backdrop-blur-sm border border-white/10'
-            }`}
+            className={`px-3 py-1 text-xs rounded-full transition-colors ${inputType === 'coordinates'
+              ? 'bg-blue-500/80 text-white backdrop-blur-sm border border-white/20'
+              : 'bg-white/10 text-white/70 hover:bg-white/20 backdrop-blur-sm border border-white/10'
+              }`}
           >
             Lat, Lon
           </button>
         </div>
-        
+
         {/* Input Field */}
         <div className="flex space-x-2">
           <input
@@ -220,11 +217,11 @@ const WeatherWidget = () => {
             onChange={(e) => setLocationInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={
-              inputType === 'city' 
-                ? 'Enter city name (e.g., Mumbai, New York, London)' 
-                : inputType === 'pincode' 
-                ? 'Enter PIN code (e.g., 522508)' 
-                : 'Enter coordinates (e.g., 16.3067, 80.4365)'
+              inputType === 'city'
+                ? 'Enter city name (e.g., Mumbai, New York, London)'
+                : inputType === 'pincode'
+                  ? 'Enter PIN code (e.g., 522508)'
+                  : 'Enter coordinates (e.g., 16.3067, 80.4365)'
             }
             className="flex-1 px-3 py-2 text-sm bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
           />
@@ -246,7 +243,7 @@ const WeatherWidget = () => {
         </div>
         {getWeatherIcon(weather.icon)}
       </div>
-      
+
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <Thermometer className="h-6 w-6 text-red-400 mr-2" />
@@ -256,7 +253,7 @@ const WeatherWidget = () => {
           <p className="text-sm font-medium text-white/80 capitalize">{weather.description}</p>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/20">
         <div className="flex items-center">
           <Droplets className="h-4 w-4 text-blue-400 mr-2" />
@@ -273,12 +270,11 @@ const WeatherWidget = () => {
         <div className="mt-4 pt-4 border-t border-white/20">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-white">Air Quality</span>
-            <span className={`text-xs px-2 py-1 rounded-full ${
-              weather.airQuality.aqi <= 50 ? 'bg-green-500/20 text-green-300' :
+            <span className={`text-xs px-2 py-1 rounded-full ${weather.airQuality.aqi <= 50 ? 'bg-green-500/20 text-green-300' :
               weather.airQuality.aqi <= 100 ? 'bg-yellow-500/20 text-yellow-300' :
-              weather.airQuality.aqi <= 150 ? 'bg-orange-500/20 text-orange-300' :
-              'bg-red-500/20 text-red-300'
-            }`}>
+                weather.airQuality.aqi <= 150 ? 'bg-orange-500/20 text-orange-300' :
+                  'bg-red-500/20 text-red-300'
+              }`}>
               {weather.airQuality.level}
             </span>
           </div>

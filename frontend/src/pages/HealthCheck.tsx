@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+// import { motion } from 'framer-motion'
 import { Activity, Heart, AlertCircle, Send, User, Calendar, FileText, ChevronRight } from 'lucide-react'
 import { aiService } from '../services/aiService'
 import ReactMarkdown from 'react-markdown'
-import { useLanguage } from '../contexts/LanguageContext'
+// import { useLanguage } from '../contexts/LanguageContext'
 
 const HealthCheck = () => {
     // We are temporarily not using 't' since we have hardcoded English mock text for this new feature
@@ -85,9 +85,7 @@ const HealthCheck = () => {
 
                     {/* Form Section */}
                     <div className="lg:col-span-4">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                        <div
                             className="bg-white rounded-3xl shadow-xl shadow-orange-900/5 overflow-hidden border border-orange-100"
                         >
                             <div className="bg-orange-50/50 p-6 border-b border-orange-100">
@@ -184,15 +182,12 @@ const HealthCheck = () => {
                                     </button>
                                 </form>
                             </div>
-                        </motion.div>
+                        </div>
                     </div>
 
                     {/* Results Section */}
                     <div className="lg:col-span-8">
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.1 }}
+                        <div
                             className="h-full"
                         >
                             {result ? (
@@ -283,7 +278,7 @@ const HealthCheck = () => {
                                     </div>
                                 </div>
                             )}
-                        </motion.div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -66,7 +66,7 @@ const SOS = () => {
   // Real-time updates
   useEffect(() => {
     if (socket && isConnected) {
-      socket.on('newSOS', (newReport) => {
+      socket.on('newSOS', () => {
         // Optimistically add to list or fetch fresh
         // For simplicity and to ensure sorted order/normalized data, fetching fresh is safer unless we normalize here
         fetchSOSReports()

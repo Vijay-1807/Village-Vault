@@ -23,8 +23,7 @@ const AIChatWidget = () => {
     ])
     const [inputMessage, setInputMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [currentModel] = useState(aiService.getCurrentModel())
+    // const [currentModel] = useState(aiService.getCurrentModel())
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
     const scrollToBottom = () => {

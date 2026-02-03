@@ -17,7 +17,7 @@ export interface SOSLocationData extends LocationData {
 }
 
 class GeolocationService {
-  private readonly GOOGLE_MAPS_API_KEY = 'demo' // Replace with your API key
+  // private readonly GOOGLE_MAPS_API_KEY = 'demo' // Replace with your API key
   private readonly REVERSE_GEOCODING_BASE = 'https://api.bigdatacloud.net/data/reverse-geocode-client'
 
   // Get current location using browser geolocation
@@ -31,11 +31,11 @@ class GeolocationService {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude, accuracy } = position.coords
-          
+
           try {
             // Get address from coordinates
             const addressData = await this.reverseGeocode(latitude, longitude)
-            
+
             resolve({
               lat: latitude,
               lon: longitude,
@@ -91,13 +91,13 @@ class GeolocationService {
       const response = await fetch(
         `${this.REVERSE_GEOCODING_BASE}?latitude=${lat}&longitude=${lon}&localityLanguage=en`
       )
-      
+
       if (!response.ok) {
         throw new Error('Reverse geocoding failed')
       }
-      
+
       const data = await response.json()
-      
+
       return {
         address: data.localityInfo?.administrative?.[0]?.name || 'Unknown Address',
         city: data.city || data.locality || 'Unknown City',
@@ -120,7 +120,7 @@ class GeolocationService {
   async getSOSLocation(emergencyType: string, severity: 'low' | 'medium' | 'high' | 'critical', description: string): Promise<SOSLocationData> {
     try {
       const location = await this.getCurrentLocation()
-      
+
       return {
         ...location,
         emergencyType,
@@ -151,17 +151,17 @@ class GeolocationService {
     const R = 6371 // Earth's radius in kilometers
     const dLat = this.deg2rad(lat2 - lat1)
     const dLon = this.deg2rad(lon2 - lon1)
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     return R * c
   }
 
   // Convert degrees to radians
   private deg2rad(deg: number): number {
-    return deg * (Math.PI/180)
+    return deg * (Math.PI / 180)
   }
 
   // Get nearby emergency services (mock data)
@@ -203,11 +203,11 @@ class GeolocationService {
       east: 80.5,
       west: 80.3
     }
-    
-    return lat >= villageBounds.south && 
-           lat <= villageBounds.north && 
-           lon >= villageBounds.west && 
-           lon <= villageBounds.east
+
+    return lat >= villageBounds.south &&
+      lat <= villageBounds.north &&
+      lon >= villageBounds.west &&
+      lon <= villageBounds.east
   }
 }
 

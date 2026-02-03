@@ -17,9 +17,9 @@ const SecureNavigation = () => {
     if (loading) return
 
     // Handle browser back/forward navigation
-    const handlePopState = (event: PopStateEvent) => {
+    const handlePopState = () => {
       const currentPath = window.location.pathname
-      
+
       // If user is not authenticated and trying to access protected route
       if (!user && PROTECTED_ROUTES.some(route => currentPath.includes(route))) {
         // Replace current entry in history with login

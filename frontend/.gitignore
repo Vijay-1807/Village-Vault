@@ -1,2 +1,13 @@
 # Dependencies
 node_modules/
+
+# Environment Variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# Build
+dist/
+dist-ssr/
+*.local

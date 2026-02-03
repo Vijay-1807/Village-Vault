@@ -12,7 +12,7 @@ const LanguageSelector = () => {
     { code: 'kn', name: 'ಕನ್ನಡ', flag: '🇮🇳' }
   ]
 
-  const currentLanguage = languages.find(lang => lang.code === language)
+  // const currentLanguage = languages.find(lang => lang.code === language)
 
   return (
     <div className="relative">
